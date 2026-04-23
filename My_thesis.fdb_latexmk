@@ -1,24 +1,24 @@
 # Fdb version 4
-["biber My_thesis"] 0 "My_thesis.bcf" "My_thesis.bbl" "My_thesis" 1776608022.62922 -1
-  "My_thesis.bcf" 1776608021 110344 3bee70086e714997c9c33b7832b108f9 "pdflatex"
+["biber My_thesis"] 1776930836.50924 "My_thesis.bcf" "My_thesis.bbl" "My_thesis" 1776930864.67651 0
+  "My_thesis.bcf" 1776930863 110344 3bee70086e714997c9c33b7832b108f9 "pdflatex"
   "my_folder/my_biblio.bib" 1776558218 24131 301a0fc05d92122de1d44b3dbceb800f ""
   (generated)
   "My_thesis.bbl"
   "My_thesis.blg"
   (rewritten before read)
-["makeindex en.idx"] 1776608007.06906 "en.idx" "en.ind" "en" 1776608022.62885 0
-  "en.idx" 1776608015 0 d41d8cd98f00b204e9800998ecf8427e "pdflatex"
+["makeindex en.idx"] 1776930836.13801 "en.idx" "en.ind" "en" 1776930864.67601 0
+  "en.idx" 1776930856 0 d41d8cd98f00b204e9800998ecf8427e "pdflatex"
   (generated)
   "en.ilg"
   "en.ind"
   (rewritten before read)
-["makeindex ru.idx"] 1776608006.82096 "ru.idx" "ru.ind" "ru" 1776608022.62835 0
-  "ru.idx" 1776608015 0 d41d8cd98f00b204e9800998ecf8427e "pdflatex"
+["makeindex ru.idx"] 1776930835.78102 "ru.idx" "ru.ind" "ru" 1776930864.67531 0
+  "ru.idx" 1776930856 0 d41d8cd98f00b204e9800998ecf8427e "pdflatex"
   (generated)
   "ru.ilg"
   "ru.ind"
   (rewritten before read)
-["pdflatex"] 1776608014.9646 "c:/polytech/mtpo/tcp-report/My_thesis.tex" "My_thesis.pdf" "My_thesis" 1776608022.63004 0
+["pdflatex"] 1776930855.64781 "c:/polytech/mtpo/tcp-report/My_thesis.tex" "My_thesis.pdf" "My_thesis" 1776930864.67735 0
   "C:/Program Files/MiKTeX/fonts/tfm/jknappen/ec/ectt1000.tfm" 993062340 1348 d70ddf2d5d512b838e50a335e385e919 ""
   "C:/Program Files/MiKTeX/fonts/tfm/public/amsfonts/euler/eurm10.tfm" 1233951852 1228 9be37fdf0dc0e1f4df4af3594876d628 ""
   "C:/Program Files/MiKTeX/fonts/tfm/public/amsfonts/euler/eurm7.tfm" 1233951852 1228 22a83614922c993c1b2e124955a38ca1 ""
@@ -309,29 +309,29 @@
   "C:/Users/pe1me/AppData/Roaming/MiKTeX/tex/latex/xassoccnt/xassoccnt.sty" 1637493339 123700 eb24357e4512f6cd777bd04fe5f91779 ""
   "C:/Users/pe1me/AppData/Roaming/MiKTeX/tex/latex/xfor/xfor.sty" 1233849756 2689 44855b72da58344b1c1d9b3087bce6ca ""
   "C:/Users/pe1me/AppData/Roaming/MiKTeX/tex/latex/xpatch/xpatch.sty" 1585221260 8510 7803f78066c4f9d008405191a4b43073 ""
-  "My_thesis.aux" 1776608021 16030 0ce36799a29dce0437a3925e7743aab8 "pdflatex"
-  "My_thesis.bbl" 1776607952 6050 8fd7320fa1e93a7aa75108056169eb36 "biber My_thesis"
-  "My_thesis.run.xml" 1776608021 2380 6fed86b6938c3e3fcda788e9ad5c9e85 "pdflatex"
+  "My_thesis.aux" 1776930863 16358 6a6e5c6fc2651f9f32084905b91e74d1 "pdflatex"
+  "My_thesis.bbl" 1776930844 6050 8fd7320fa1e93a7aa75108056169eb36 "biber My_thesis"
+  "My_thesis.run.xml" 1776930863 2380 6fed86b6938c3e3fcda788e9ad5c9e85 "pdflatex"
   "My_thesis.tex" 1776607036 1810 c633d1d14976e3ea580b38664b086a07 ""
-  "My_thesis.toc" 1776608021 3179 e35bdbdef6e3d05cfb64f46034aa88a1 "pdflatex"
+  "My_thesis.toc" 1776930863 3296 c7bfb9b9045a10ceaacec40b37ad77c4 "pdflatex"
   "c:/polytech/mtpo/tcp-report/My_thesis.tex" 1776607036 1810 c633d1d14976e3ea580b38664b086a07 ""
-  "en.ind" 1776608007 0 d41d8cd98f00b204e9800998ecf8427e "makeindex en.idx"
+  "en.ind" 1776930836 0 d41d8cd98f00b204e9800998ecf8427e "makeindex en.idx"
   "my_folder/appendix1.tex" 1776608006 52088 830cf047dd8fa8ca327003223d8d821d ""
   "my_folder/chapter1.tex" 1776558947 5324 07fc7920679074e897566e996903c208 ""
   "my_folder/chapter2.tex" 1776596981 2622 0fef2d60afb264de97fd4d51df4d8f0c ""
   "my_folder/chapter3.tex" 1776566325 10065 b630158e59203512c4d67adba7562000 ""
   "my_folder/chapter4.tex" 1776566529 4846 411af2cfc4cac817f582681b8fbd47d8 ""
   "my_folder/chapter5.tex" 1776598467 9850 e79ec949808b0487cca65e27223348f5 ""
-  "my_folder/chapter6.tex" 1776606495 8715 86b8b53d621cf086a5b8901fac5c1dcb ""
+  "my_folder/chapter6.tex" 1776930713 10006 c9b4bc0a1637eebbdd9e9586c4d2e513 ""
   "my_folder/conclusion.tex" 1776606674 3090 0dd810cc73e10fd2c726648625943e08 ""
   "my_folder/contents.tex" 1776542329 1024 38cadcf6da0e483c7f7700e2d42b7bd0 ""
-  "my_folder/images/bfm_apfd.png" 1776605271 51684 7ede891760c47c67d4796bd5ada10dad ""
-  "my_folder/images/defects4j_apfd.png" 1776605271 70714 1bddef068615fd74795d5e522815e9c2 ""
+  "my_folder/images/bfm_apfd.png" 1776930186 51685 67cc1a1355ca76a22ea1ecdd7a51b28c ""
+  "my_folder/images/defects4j_apfd.png" 1776930186 70745 17602f0fd924deea061d9deac2d32d99 ""
   "my_folder/introduction.tex" 1776545269 3494 a2be6108a5c0afa9b338a9c79fa6db41 ""
   "my_folder/my_settings.tex" 1776542329 4173 118847b374c73e52b07466c278797500 ""
   "my_folder/references.tex" 1776606944 3665 4446f6447b9f264330e3c3a13450a79d ""
   "my_folder/title.tex" 1776544259 6369 b3432d0a0036c09de5a7eb19a3ff2755 ""
-  "ru.ind" 1776608007 0 d41d8cd98f00b204e9800998ecf8427e "makeindex ru.idx"
+  "ru.ind" 1776930836 0 d41d8cd98f00b204e9800998ecf8427e "makeindex ru.idx"
   "template_settings/Dissertation/dispackages.tex" 1776542330 4083 78a14c675fef46879d091142571580ca ""
   "template_settings/Dissertation/disstyles.tex" 1776542330 29840 4fd5fc08b77955f7c456dc7f92776222 ""
   "template_settings/Dissertation/inclusioncontrol.tex" 1776542330 799 fb4e6e56e8244c5934f1dda5c87da8e9 ""
