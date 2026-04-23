@@ -12,98 +12,136 @@
 \makeatother
 
 
-%%% Распечатать версию документа / Print document version
-%%
-\begin{flushright}
-%	\vspace{0pt plus0.1fill}
-	\boxed{\small
-		\begin{tabular}{r} 
-			\textbf{Пример ВКР <<SPbPU-student-thesis-template>>.} %\\ % перенос на новую строку
-			\textbf{Версия от \today % \; время:  \currenttime. % время версии
-			}
-		\end{tabular}
-	} %end boxed
-%	\vspace*{-5pt} % раскомментировать, если не хватает места
-	\vspace{0pt plus0.1fill} % раскоментировать, если хватает места
-\end{flushright}
+% %%% Распечатать версию документа / Print document version
+% %%
+% \begin{flushright}
+% %	\vspace{0pt plus0.1fill}
+% 	\boxed{\small
+% 		\begin{tabular}{r} 
+% 			\textbf{Пример ВКР <<SPbPU-student-thesis-template>>.} %\\ % перенос на новую строку
+% 			\textbf{Версия от \today % \; время:  \currenttime. % время версии
+% 			}
+% 		\end{tabular}
+% 	} %end boxed
+% %	\vspace*{-5pt} % раскомментировать, если не хватает места
+% 	\vspace{0pt plus0.1fill} % раскоментировать, если хватает места
+% \end{flushright}
 
-{\centering%
-	\Ministry\\
-	\SPbPU\\
-	{%\bfseries %2020 - указание на изменения, которые могут быть введены в 2020 году
-		\institute}
-\par}%
+% {\centering%
+% 	\Ministry\\
+% 	\SPbPU\\
+% 	{%\bfseries %2020 - указание на изменения, которые могут быть введены в 2020 году
+% 		\institute}
+% \par}%
 
 
-\vspace{0pt plus1fill} %число перед fill = кратность относительно некоторого расстояния fill, кусками которого заполнены пустые места
+% \vspace{0pt plus1fill} %число перед fill = кратность относительно некоторого расстояния fill, кусками которого заполнены пустые места
 
+
+% \noindent
+% \begin{minipage}{\linewidth}
+% 	\vspace{\mfloatsep} % интервал 
+% 	\begin{tabularx}{\linewidth}{Xl}
+% 	&Работа допущена к защите     \\
+% 	&\HeadTitle     \\			
+% 	&\underline{\hspace*{0.1\textheight}} \Head     \\
+% 	&<<\underline{\hspace*{0.05\textheight}}>> \underline{\hspace*{0.1\textheight}} \approveYear~г.  \\ 
+% 	\end{tabularx}
+% 	\vspace{\mfloatsep} % интервал 	
+% \end{minipage}
+
+
+% \vspace{0pt plus2fill} %
+
+
+% {\centering%
+	
+% 	\MakeUppercase{\bfseries{}\DocType} \\ 
+% 	\MakeUppercase{\normalfont{}\thesisDegree}%
+
+
+% %\intervalS% %ОБЯЗАТЕЛЬНО ДОБАВИТЬ ОТСТУП, ЕСЛИ ХВАТАЕТ МЕСТА
+% {\centering%
+% 	\MakeUppercase{\bfseries{\thesisTitle}}}%
+
+% }\par%
+
+% %\intervalS% %ОБЯЗАТЕЛЬНО ДОБАВИТЬ ОТСТУП, ЕСЛИ ХВАТАЕТ МЕСТА
+% %по специальности % для специалистов
+% \noindent	по направлению подготовки 09.03.03 Прикладная информатика\\% для бакалавров и магистров 
+% %\noindent Направленность  % для специалистов
+% \noindent	Направленность (профиль)	\thesisOPCodeAndTitle % для бакалавров и магистров
+% % Лучше по~профилю, но что делать, так составили Положение
+% \par%
+
+
+
+
+
+% \vspace{4mm plus2fill}%
+
+% \noindent
+% \begin{tabularx}{\linewidth}{lXl}
+% 	Выполнил              &	   &             \\
+% 	студент гр. 5130903/40003    &    & А.Б. Авдеева     \\[\mfloatsep]
+
+% 	Руководитель 		  &    &             \\
+% 	\SupervisorJob,		  &    &             \\
+% 	\SupervisorDegree, \SupervisorTitle\footnote{Должность указывают сокращенно, учёную степень и звание ---~при наличии, а~подразделения ---~аббревиатурами. <<СПбПУ>> и~аббревиатуры институтов не добавляют.} 	  &    & \Supervisor \\[\mfloatsep]
+	
+% 	Консультант\footnote{Оформляется по решению руководителя ОП или подразделения. Только 1 категория: <<Консультант>>. В исключительных случаях можно указать <<Научный консультант>> (должен иметь степень). Без печати и заверения подписи.}		  &    & 			 \\
+% 	\ConsultantExtraDegree 	  &    & \ConsultantExtra\\[\mfloatsep]
+	
+% 	Консультант  &    &  \\   	
+% 	по нормоконтролю\footnote{Обязателен, из числа ППС по решению руководителя ОП или подразделения. Должность и степень не указываются. Сведения помещаются в последнюю строчку по порядку. Рецензенты не указываются.}  		 	  &    & \ConsultantNorm  % обязателен
+% \end{tabularx} %
+
+
+% %
+% \vspace{0pt plus4fill}% 
+
+
+% \begin{center}%
+% 	Санкт-Петербург \\
+% 2025 \\
+% \end{center}%
+% \restoregeometry
+% \newpage
+
+
+% --- Верхняя часть ---
+\vspace*{10mm}
+\begin{center}
+{\fontsize{14pt}{16pt}\selectfont
+Санкт-Петербургский политехнический университет Петра\\
+Великого\\[4mm]
+Институт компьютерных наук и кибербезопасности\\
+Высшая школа программной инженерии
+}
+\end{center}
+
+% --- Заголовки по центру ---
+\vspace*{10mm}
+\begin{center}
+{\bfseries\fontsize{16pt}{18pt}\selectfont Приоритизация тестовых случаев на основе генетического алгоритма}\\[3mm]
+% {\bfseries\fontsize{14pt}{16pt}\selectfont Статический и динамический анализ приложения}\\[3mm]
+{\fontsize{14pt}{16pt}\selectfont по дисциплине «Методы тестирования программного обеспечения»}
+\end{center}
+
+% --- НИЖНИЙ БЛОК КАК НА СКРИНЕ (компилируется нормально) ---
+\vspace*{85mm}
 
 \noindent
-\begin{minipage}{\linewidth}
-	\vspace{\mfloatsep} % интервал 
-	\begin{tabularx}{\linewidth}{Xl}
-	&Работа допущена к защите     \\
-	&\HeadTitle     \\			
-	&\underline{\hspace*{0.1\textheight}} \Head     \\
-	&<<\underline{\hspace*{0.05\textheight}}>> \underline{\hspace*{0.1\textheight}} \approveYear~г.  \\ 
-	\end{tabularx}
-	\vspace{\mfloatsep} % интервал 	
-\end{minipage}
+\begin{tabular*}{\textwidth}{@{}p{0.68\textwidth}@{\extracolsep{\fill}}>{\raggedleft\arraybackslash}p{0.30\textwidth}@{}}
+\textbf{Выполнил} & \\[6pt]
+студент гр.5130903/40003 & Я. М. Качанов\\[18pt]
 
+\textbf{Руководитель} & \\[6pt]
+старший преподаватель & \\[2pt]
+ВШПИ & В. А. Пархоменко\\
+\end{tabular*}
 
-\vspace{0pt plus2fill} %
-
-
-{\centering%
-	
-	\MakeUppercase{\bfseries{}\DocType} \\ 
-	\MakeUppercase{\normalfont{}\thesisDegree}%
-
-
-%\intervalS% %ОБЯЗАТЕЛЬНО ДОБАВИТЬ ОТСТУП, ЕСЛИ ХВАТАЕТ МЕСТА
-{\centering%
-	\MakeUppercase{\bfseries{\thesisTitle}}}%
-
-}\par%
-
-%\intervalS% %ОБЯЗАТЕЛЬНО ДОБАВИТЬ ОТСТУП, ЕСЛИ ХВАТАЕТ МЕСТА
-%по специальности % для специалистов
-\noindent	по направлению подготовки \thesisSpecialtyCodeAndTitle{}\\% для бакалавров и магистров 
-%\noindent Направленность  % для специалистов
-\noindent	Направленность (профиль)	\thesisOPCodeAndTitle % для бакалавров и магистров
-% Лучше по~профилю, но что делать, так составили Положение
-\par%
-
-
-
-
-
-\vspace{4mm plus2fill}%
-
-\noindent
-\begin{tabularx}{\linewidth}{lXl}
-	Выполнил              &	   &             \\
-	студент гр.~\group     &    & \Author     \\[\mfloatsep]
-
-	Руководитель 		  &    &             \\
-	\SupervisorJob,		  &    &             \\
-	\SupervisorDegree, \SupervisorTitle\footnote{Должность указывают сокращенно, учёную степень и звание ---~при наличии, а~подразделения ---~аббревиатурами. <<СПбПУ>> и~аббревиатуры институтов не добавляют.} 	  &    & \Supervisor \\[\mfloatsep]
-	
-	Консультант\footnote{Оформляется по решению руководителя ОП или подразделения. Только 1 категория: <<Консультант>>. В исключительных случаях можно указать <<Научный консультант>> (должен иметь степень). Без печати и заверения подписи.}		  &    & 			 \\
-	\ConsultantExtraDegree 	  &    & \ConsultantExtra\\[\mfloatsep]
-	
-	Консультант  &    &  \\   	
-	по нормоконтролю\footnote{Обязателен, из числа ППС по решению руководителя ОП или подразделения. Должность и степень не указываются. Сведения помещаются в последнюю строчку по порядку. Рецензенты не указываются.}  		 	  &    & \ConsultantNorm  % обязателен
-\end{tabularx} %
-
-
-%
-\vspace{0pt plus4fill}% 
-
-
-\begin{center}%
-Санкт-Петербург \\
-\thesisYear
-\end{center}%
-\restoregeometry
-\newpage
+\vfill
+\begin{center}
+Санкт-Петербург – 2026
+\end{center}

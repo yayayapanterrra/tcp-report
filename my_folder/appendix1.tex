@@ -1,146 +1,1194 @@
-\chapter{Краткие инструкции по настройке издательской системы \LaTeX}\label{appendix-MikTeX-TexStudio}							% Заголовок
-%\addcontentsline{toc}{chapter}{Second call for chapters to participate in the book Machine learning in analysis of biomedical and socio-economic data}	% Добавляем его в оглавление
+\chapter{Программный код\label{appendix-extra-examples}}							% 
 
-В SPbPU-BCI-template {\itshape автоматически выставляются необходимые настройки и в исходном тексте шаблона приведены примеры оформления текстово-графических объектов}, поэтому авторам достаточно заполнить имеющийся шаблон текстом главы (статьи), не вдаваясь в детали оформления, описанные далее. Возможный <<быстрый старт>> оформления главы (статьи) под Windows следующий\footnote{Внимание! Пример оформления подстрочной ссылки (сноски).}:
+\begin{lstlisting}[language=Java, breaklines=true]
+package com.tcp.algorithm;
 
-\begin{enumerate}
-	\item Установка полной версии TeX Live  \cite{latex-texlive}.  В процессе установки лучше выставить параметр доустановки пакетов <<на лету>>.
-	
-	\item Установка TexStudio \cite{latex-texstudio}.
-	
-%		\item установка шрифтов PSCyr для работы с TimesNew\-Roman\-PSMT  	\href{https://github.com/AndreyAkinshin/Russian-Phd-LaTeX-Dissertation-Template/blob/master/PSCyr/Windows.md}{по данной инструкции}. В итоговом документе будет, скорее всего, использован Newton.
-	
-%	\item Переименование следующих файлов, где вместо \texttt{AuthorsSur\-names} необходимо подставить фамилии авторов (можно сокращать до первых четырех букв): 
-%	
-%	\begin{enumerate}
-%		\item Основной файл \texttt{Book\_title\_ch\_Authors\-Sur\-names.tex}.
-%		\item Библиография \texttt{biblio\textbackslash{}Book\_title\_bib\_Authors\-Sur\-na\-mes\-.bib}.
-%		\item Пользовательские настройки (при необходимости), \texttt{common\textbackslash{}Book\_\-tit\-le\_ext\_Authors\-Sur\-names.tex}. 
-%	\end{enumerate}
-%	
-%	\item После открытия основного файла \texttt{Book\_title\_ch\_Authors\-Sur\-names.tex} (с новым названием)   переименовать названия по аналогии в следующих командах \texttt{\textbackslash{}input\{\}}:
-%	
-%	\begin{enumerate}
-%		\item \texttt{biblio/Book\_title\_bib\_Authors\-Sur\-names.bib},
-%		\item \texttt{common/Book\_title\_ext\_Authors\-Sur\-names.tex (при необходимости) }.
-%	\end{enumerate}
-%	
-	
-	\item Запуск TexStudio и компиляция \verb|my_chapter.tex| с помощью команды <<Build\&View>> (например, с помощью двойной зелёной стрелки в верхней панели). {\itshape Иногда, для достижения нужного результата необходимо несколько раз скомпилировать документ.}
-	
-	\item В случае, если не отобразилась библиография, можно
-	
-	\begin{itemize}
-		\item воспользоваться командой Tools $\to$ Commands $\to$ Biber, затем запустив Build\&View;
-		
-		\item настроить автоматическое включение библиографии в настройках Options $\to$ Configure TexStudio $\to$ Build $\to$  Build\&View (оставить по умолчанию, если сборка происходит слишком долго): \texttt{txs:///pdflatex | txs:///biber | txs:///pdflatex | txs:///pdflatex | txs:///\-view-pdf}.
-	\end{itemize}
-	
-\end{enumerate}
-
-В случае возникновения ошибок, попробуйте скомпилировать документ до последних действий или внимательно ознакомьтесь с описанием проблемы в log-файле. Бывает полезным переход (по подсказке TexStudio) в нужную строку в pdf-файле или запрос с текстом ошибке в поисковиках. Наиболее вероятной проблемой при первой компиляции может быть отсутствие какого-либо установленного пакета \LaTeX. 
-
-В случае корректной работы настройки <<установка на лету>> все дополнительные пакеты будут скачиваться и устанавливаться в автоматическом режиме. Если доустановка пакетов осуществляется медленно (несколько пакетов за один запуск компилятора), то можно попробовать установить их в ручном режиме следующим образом:
-
-\begin{enumerate}[1.]
-	\item Запустите программу: меню $\to$ все программы $\to$ MikTeX $\to$ Maintenance (Admin) $\to$ MiKTeX Package Manager (Admin).
-	\item Пользуясь поиском, убедитесь, что нужный пакет присутствует, но не установлен (если пакет отсутствует воспользуйтесь сначала MiKTeX Update (Admin)).
-	\item Выделив строку с пакетом (возможно выбрать несколько или вообще все неустановленные пакеты), выполните установку Tools $\to$ Install или с помощью контекстного меню.
-	\item После завершения установки запустите программу MiKTeX Settings (Admin).
-	\item Обновите базу данных имен файлов Refresh FNDB.
-\end{enumerate}
+import com.tcp.model.TestCase;
+import java.util.*;
 
 
-Для проверки текста статьи на русском языке полезно также воспользоваться настройками Options $\to$ Configure TexStudio $\to$ Language Checking $\to$  Default Language. Если русский язык <<ru\_RU>> не будет доступен в меню выбора, то необходимо вначале выполнить Import Dictionary, скачав из интернета любой русскоязычный словарь. 
+/**
+ * базовый жадный алгоритм
+ * на каждом шаге выбирает тест, покрывающий наибольшее количество
+ */
+
+public class AdditionalPrioritizer implements Prioritizer {
+
+    @Override
+    public List<TestCase> prioritize(List<TestCase> testPool) {
+        List<TestCase> result = new ArrayList<>();
+        Set<String> coveredMethods = new HashSet<>();
+        //копия пула, чтобы не модифицировать исходный список
+        List<TestCase> remaining = new ArrayList<>(testPool);
+
+        while (!remaining.isEmpty()) {
+            TestCase bestTest = null;
+            int maxNewCoverage = -1;
+
+            //поиск теста с максимальным новым покрытием
+            for (TestCase test : remaining) {
+                int newCount = 0;
+                for (String method : test.getCoveredMethods()) {
+                    if (!coveredMethods.contains(method)) {
+                        newCount++;
+                    }
+                }
+
+                if (newCount > maxNewCoverage) {
+                    maxNewCoverage = newCount;
+                    bestTest = test;
+                } else if (newCount == maxNewCoverage && bestTest != null) {
+                    //если покрытие одинаковое берем тест с большей fault proneness
+                    if (test.getFaultProneness() > bestTest.getFaultProneness()) {
+                        bestTest = test;
+                    }
+                }
+            }
+            //fallback: если все оставшиеся тесты не покрывают ничего нового
+            if (bestTest == null) {
+                bestTest = remaining.get(0);
+            }
+
+            result.add(bestTest);
+            remaining.remove(bestTest);
+            coveredMethods.addAll(bestTest.getCoveredMethods());
+
+        }
+        return result;
+    }
+
+    @Override
+    public String getName() {
+        return "Additional";
+    }
+
+}
+\end{lstlisting}
 
 
-%\chapter{\normalfont\normalsize{}Часто задаваемые вопросы (FAQ)}\label{Appendix-FAQ}							% Заголовок
-%%\addcontentsline{toc}{chapter}{Second call for chapters to participate in the book Machine learning in analysis of biomedical and socio-economic data}	% Добавляем его в оглавление
+\begin{lstlisting}[language=Java, breaklines=true]
+package com.tcp.algorithm;
+
+import com.tcp.fitness.GaFitnessFunction;
+import com.tcp.metric.ApfdCalculator;
+import com.tcp.model.TestCase;
+
+import java.util.*;
+
+/**
+ * Генетический алгоритм приоритизации тестов.
+ *
+ * Поддерживает два режима фитнесс-функции:
+ *   1. Прямой APFD -- если переданы testToFaults и totalFaults (как в статье Paygude et al.)
+ *   2. GaFitnessFunction -- взвешенная сумма coverage + faultProneness + diversity
+ *
+ * Операторы:
+ *   инициализация: случайное перемешивание
+ *   селекция: турнирная (tournament selection)
+ *   кроссовер: OX (Order Crossover)
+ *   мутация: адаптивное число swap = sqrt(n)
+ *   элитизм: лучшая особь переходит без изменений
+ */
+public class GeneticPrioritizer implements Prioritizer {
+
+    private static final int TOURNAMENT_SIZE = 3;
+
+    private final int populationSize;
+    private final int generations;
+    private final double crossoverRate;
+    private final double mutationRate;
+    private final GaFitnessFunction fitnessFunction; // null если используется APFD-режим
+    private final Map<String, Set<String>> testToFaults; // null если используется GaFitnessFunction
+    private final int totalFaults;
+    private final Random rng = new Random(42);
+
+    // Конструктор для режима GaFitnessFunction (coverage + faultProneness + diversity)
+    public GeneticPrioritizer(int populationSize, int generations,
+                              double crossoverRate, double mutationRate,
+                              GaFitnessFunction fitnessFunction) {
+        this(populationSize, generations, crossoverRate, mutationRate, fitnessFunction, null, 0);
+    }
+
+    // Конструктор для режима прямого APFD (как в статье Paygude et al.)
+    public GeneticPrioritizer(int populationSize, int generations,
+                              double crossoverRate, double mutationRate,
+                              GaFitnessFunction fitnessFunction,
+                              Map<String, Set<String>> testToFaults,
+                              int totalFaults) {
+        this.populationSize = populationSize;
+        this.generations = generations;
+        this.crossoverRate = crossoverRate;
+        this.mutationRate = mutationRate;
+        this.fitnessFunction = fitnessFunction;
+        this.testToFaults = testToFaults;
+        this.totalFaults = totalFaults;
+    }
+
+    // Выбирает режим фитнесса: прямой APFD или GaFitnessFunction
+    private double fitness(List<TestCase> seq) {
+        if (testToFaults != null && totalFaults > 0)
+            return ApfdCalculator.calculate(seq, testToFaults, totalFaults);
+        return fitnessFunction.calculateFitness(seq);
+    }
+
+    @Override
+    public List<TestCase> prioritize(List<TestCase> testPool) {
+        if (testPool.isEmpty()) return new ArrayList<>();
+
+        // адаптивная интенсивность мутации: sqrt(n) swap
+        final int mutationIntensity = Math.max(1, (int) Math.sqrt(testPool.size()));
+
+        List<List<TestCase>> population = initPopulation(testPool);
+        double[] fit = evalAll(population);
+
+        int bestIdx = argmax(fit);
+        List<TestCase> bestEver = new ArrayList<>(population.get(bestIdx));
+        double bestFitness = fit[bestIdx];
+
+        for (int gen = 0; gen < generations; gen++) {
+            List<List<TestCase>> next = new ArrayList<>(populationSize);
+            double[] nextFit = new double[populationSize];
+
+            // элитизм
+            next.add(new ArrayList<>(bestEver));
+            nextFit[0] = bestFitness;
+
+            while (next.size() < populationSize) {
+                List<TestCase> child1 = new ArrayList<>(tournament(population, fit));
+                List<TestCase> child2 = new ArrayList<>(tournament(population, fit));
+
+                boolean crossed = false;
+                if (rng.nextDouble() < crossoverRate) {
+                    oxCrossover(child1, child2);
+                    crossed = true;
+                }
+
+                boolean mutated1 = false, mutated2 = false;
+                if (rng.nextDouble() < mutationRate) { mutate(child1, mutationIntensity); mutated1 = true; }
+                if (rng.nextDouble() < mutationRate) { mutate(child2, mutationIntensity); mutated2 = true; }
+
+                int i = next.size();
+                next.add(child1);
+                nextFit[i] = (crossed || mutated1)
+                        ? fitness(child1)
+                        : fit[indexOf(population, child1)];
+
+                if (next.size() < populationSize) {
+                    int j = next.size();
+                    next.add(child2);
+                    nextFit[j] = (crossed || mutated2)
+                            ? fitness(child2)
+                            : fit[indexOf(population, child2)];
+                }
+            }
+
+            population = next;
+            fit = nextFit;
+
+            int idx = argmax(fit);
+            if (fit[idx] > bestFitness) {
+                bestFitness = fit[idx];
+                bestEver = new ArrayList<>(population.get(idx));
+            }
+        }
+
+        return bestEver;
+    }
+
+    private List<List<TestCase>> initPopulation(List<TestCase> pool) {
+        List<List<TestCase>> pop = new ArrayList<>(populationSize);
+        for (int i = 0; i < populationSize; i++) {
+            List<TestCase> ind = new ArrayList<>(pool);
+            Collections.shuffle(ind, rng);
+            pop.add(ind);
+        }
+        return pop;
+    }
+
+    private double[] evalAll(List<List<TestCase>> population) {
+        double[] f = new double[population.size()];
+        for (int i = 0; i < population.size(); i++)
+            f[i] = fitness(population.get(i));
+        return f;
+    }
+
+    private List<TestCase> tournament(List<List<TestCase>> population, double[] fit) {
+        int best = rng.nextInt(population.size());
+        for (int i = 1; i < TOURNAMENT_SIZE; i++) {
+            int candidate = rng.nextInt(population.size());
+            if (fit[candidate] > fit[best]) best = candidate;
+        }
+        return population.get(best);
+    }
+
+    /**
+     * OX (Order Crossover): сохраняет валидную перестановку.
+     * Сегмент [start, end] из p1 копируется в child1,
+     * остаток заполняется из p2 в порядке появления. Аналогично для child2.
+     */
+    private void oxCrossover(List<TestCase> p1, List<TestCase> p2) {
+        int size = p1.size();
+        if (size < 2) return;
+
+        int start = rng.nextInt(size);
+        int end = rng.nextInt(size);
+        if (start > end) { int tmp = start; start = end; end = tmp; }
+        if (start == end) end = Math.min(end + 1, size - 1);
+
+        List<TestCase> c1 = buildOxChild(p1, p2, start, end);
+        List<TestCase> c2 = buildOxChild(p2, p1, start, end);
+        p1.clear(); p1.addAll(c1);
+        p2.clear(); p2.addAll(c2);
+    }
+
+    private List<TestCase> buildOxChild(List<TestCase> donor, List<TestCase> filler, int start, int end) {
+        int size = donor.size();
+        List<TestCase> child = new ArrayList<>(Collections.nCopies(size, null));
+        Set<String> inSegment = new HashSet<>();
+
+        for (int i = start; i <= end; i++) {
+            child.set(i, donor.get(i));
+            inSegment.add(donor.get(i).getId());
+        }
+
+        Queue<TestCase> rest = new ArrayDeque<>();
+        for (TestCase t : filler)
+            if (!inSegment.contains(t.getId())) rest.add(t);
+
+        for (int i = 0; i < size; i++)
+            if (child.get(i) == null) child.set(i, rest.poll());
+
+        return child;
+    }
+
+    private void mutate(List<TestCase> ind, int intensity) {
+        for (int k = 0; k < intensity; k++)
+            Collections.swap(ind, rng.nextInt(ind.size()), rng.nextInt(ind.size()));
+    }
+
+    private int argmax(double[] arr) {
+        int best = 0;
+        for (int i = 1; i < arr.length; i++)
+            if (arr[i] > arr[best]) best = i;
+        return best;
+    }
+
+    private int indexOf(List<List<TestCase>> population, List<TestCase> ind) {
+        for (int i = 0; i < population.size(); i++)
+            if (population.get(i) == ind) return i;
+        return 0;
+    }
+
+    @Override
+    public String getName() { return "GeneticPrioritizer"; }
+}
+\end{lstlisting}
+
+\begin{lstlisting}[language=Java, breaklines=true]
+package com.tcp.algorithm;
+
+import com.tcp.model.TestCase;
+import java.util.List;
+
+/*
+интерфейс для всех алгоритмов приоритизации
+позволяет единообразно вызывать любые стратегии
+ */
+public interface Prioritizer {
+    /**
+     * основной метод
+     * принимает неупорядоченный пул тестов и возвращает список, отсортированный по приоритету
+     *
+     * @param testPool  - исходный список тестов
+     * @return упорядоченный список тестов
+     */
+    List<TestCase> prioritize(List<TestCase> testPool);
+
+    /**
+     * возвращает название алгоритма для логирования и отчетов
+     * @return имя метода приоритизации
+     */
+    String getName();
+
+}
+\end{lstlisting}
+
+\begin{lstlisting}[language=Java, breaklines=true]
+package com.tcp.algorithm;
+
+import com.tcp.model.TestCase;
+
+import java.util.*;
+
+/**
+ * Random Search -- случайная перестановка тестов.
+ * Используется как baseline для сравнения с оптимизационными алгоритмами.
+ *
+ * Для воспроизводимости результатов используется фиксированный seed.
+ * APFD усредняется по нескольким прогонам в Main.
+ */
+public class RandomPrioritizer implements Prioritizer {
+
+    private final Random rng;
+
+    // seed для воспроизводимости
+    public RandomPrioritizer(long seed) {
+        this.rng = new Random(seed);
+    }
+
+    @Override
+    public List<TestCase> prioritize(List<TestCase> testPool) {
+        List<TestCase> result = new ArrayList<>(testPool);
+        Collections.shuffle(result, rng);
+        return result;
+    }
+
+    @Override
+    public String getName() { return "Random"; }
+}
+
+\end{lstlisting}
+
+\begin{lstlisting}[language=Java, breaklines=true]
+    package com.tcp.data;
+
+import com.tcp.model.TestCase;
+
+import java.io.*;
+import java.util.*;
+import java.util.stream.Collectors;
+
+public class DataLoader {
+
+    public static class FaultMatrixData {
+        public final List<TestCase> tests;
+        public final Map<String, Set<String>> testToFaults;
+        public final int totalFaults;
+
+        public FaultMatrixData(List<TestCase> tests, Map<String, Set<String>> testToFaults, int totalFaults) {
+            this.tests = tests;
+            this.testToFaults = testToFaults;
+            this.totalFaults = totalFaults;
+        }
+    }
+
+    // --- BigFaultMatrix: testId,0,1,0,... ---
+
+    public static FaultMatrixData loadFaultMatrix(String filePath) throws Exception {
+        List<TestCase> tests = new ArrayList<>();
+        Map<String, Set<String>> testToFaults = new HashMap<>();
+        int totalFaults = -1;
+
+        for (String line : readLines(filePath)) {
+            String[] parts = line.split(",");
+            if (parts.length < 2) continue;
+            if (totalFaults == -1) totalFaults = parts.length - 1;
+
+            String testId = parts[0].trim();
+            Set<String> killed = new HashSet<>();
+            for (int i = 1; i < parts.length; i++)
+                if ("1".equals(parts[i].trim())) killed.add("F" + (i - 1));
+
+            double fp = totalFaults > 0 ? (double) killed.size() / totalFaults : 0.0;
+            tests.add(new TestCase(testId, killed, fp, 100.0));
+            testToFaults.put(testId, killed);
+        }
+
+        return new FaultMatrixData(tests, testToFaults, Math.max(totalFaults, 0));
+    }
+
+    public static FaultMatrixData createVariation(FaultMatrixData original, double flipRatio, long seed) {
+        Random rng = new Random(seed);
+        List<TestCase> newTests = new ArrayList<>();
+        Map<String, Set<String>> newMap = new HashMap<>();
+
+        for (TestCase t : original.tests) {
+            Set<String> faults = new HashSet<>(original.testToFaults.get(t.getId()));
+            for (int f = 0; f < original.totalFaults; f++) {
+                if (rng.nextDouble() < flipRatio) {
+                    String id = "F" + f;
+                    if (!faults.add(id)) faults.remove(id);
+                }
+            }
+            double fp = original.totalFaults > 0 ? (double) faults.size() / original.totalFaults : 0.0;
+            newTests.add(new TestCase(t.getId(), faults, fp, 100.0));
+            newMap.put(t.getId(), faults);
+        }
+
+        return new FaultMatrixData(newTests, newMap, original.totalFaults);
+    }
+
+    // --- Defects4J / tcp-methods ---
+    // Struktura papki projectPath:
+    //   coverage/matrix.csv          -- zagolovok: test,method1,...; stroki: testId,0,1,...
+    //   mutants/kill.csv             -- MutantNo,[FAIL|TIME|EXC|LIVE|UNCOV]
+    //   mutants/testMap.csv          -- TestNo,TestName,Runtime
+    //   mutants/covMap.csv           -- TestNo,MutantNo
+    //   cia/impact_probabilities.csv -- owner,method,descriptor,roc,fwd,impact
+
+    public static FaultMatrixData loadDefects4JData(String projectPath) throws Exception {
+        List<TestCase> tests = loadCoverage(projectPath + "/coverage/matrix.csv");
+        Map<String, Set<String>> testToFaults = loadKills(
+                projectPath + "/mutants/kill.csv",
+                projectPath + "/mutants/testMap.csv",
+                projectPath + "/mutants/covMap.csv",
+                tests);
+        tests = applyImpact(tests, projectPath + "/cia/impact_probabilities.csv");
+
+        int totalFaults = (int) testToFaults.values().stream().flatMap(Set::stream).distinct().count();
+        System.out.printf("  Tests: %d, mutants: %d%n", tests.size(), totalFaults);
+        return new FaultMatrixData(tests, testToFaults, totalFaults);
+    }
+
+    private static List<TestCase> loadCoverage(String path) throws Exception {
+        List<TestCase> tests = new ArrayList<>();
+        List<String> methods = new ArrayList<>();
+
+        try (BufferedReader br = new BufferedReader(new FileReader(new File(path)))) {
+            String line;
+            boolean header = true;
+            while ((line = br.readLine()) != null) {
+                line = line.trim();
+                if (line.isEmpty()) continue;
+                String[] parts = splitCsv(line);
+                if (header) {
+                    // первая строка - заголовок с именами методов
+                    for (int i = 1; i < parts.length; i++)
+                        methods.add(parts[i].replace("\"", "").trim());
+                    header = false;
+                    continue;
+                }
+                Set<String> covered = new HashSet<>();
+                for (int i = 1; i < parts.length && i - 1 < methods.size(); i++)
+                    if ("1".equals(parts[i].trim())) covered.add(methods.get(i - 1));
+                tests.add(new TestCase(parts[0].trim(), covered, 0.0, 100.0));
+            }
+        }
+        return tests;
+    }
+
+    private static Map<String, Set<String>> loadKills(String killPath, String testMapPath,
+                                                      String covMapPath, List<TestCase> tests) throws Exception {
+        Map<String, Set<String>> result = new HashMap<>();
+        for (TestCase t : tests) result.put(t.getId(), new HashSet<>());
+
+        // kill.csv: MutantNo -> status (FAIL/TIME/EXC = killed)
+        Set<String> killed = new HashSet<>();
+        for (String line : readLines(killPath)) {
+            String[] p = line.split(",");
+            if (p.length < 2) continue;
+            String status = p[1].trim();
+            if (status.equals("FAIL") || status.equals("TIME") || status.equals("EXC"))
+                killed.add(p[0].trim());
+        }
+
+        // testMap.csv: TestNo -> TestName (className only, no method)
+        Map<String, String> testNoToName = new HashMap<>();
+        for (String line : readLines(testMapPath)) {
+            String[] p = line.split(",");
+            if (p.length < 2) continue;
+            testNoToName.put(p[0].trim(), p[1].trim());
+        }
+
+        // coverage keys look like "org.jsoup.FormElementTest#methodName"
+        // testMap has only "org.jsoup.FormElementTest" (class name, no method)
+        // build index: className -> list of full testIds from coverage
+        Map<String, List<String>> classToIds = new HashMap<>();
+        for (String testId : result.keySet()) {
+            String cls = testId.contains("#") ? testId.substring(0, testId.indexOf('#')) : testId;
+            classToIds.computeIfAbsent(cls, k -> new ArrayList<>()).add(testId);
+        }
+
+        // covMap.csv: TestNo,MutantNo - assign killed mutants to tests
+        for (String line : readLines(covMapPath)) {
+            String[] p = line.split(",");
+            if (p.length < 2) continue;
+            String testNo = p[0].trim(), mutantNo = p[1].trim();
+            if (!killed.contains(mutantNo)) continue;
+            String className = testNoToName.get(testNo);
+            if (className == null) continue;
+            for (String testId : classToIds.getOrDefault(className, Collections.emptyList()))
+                result.get(testId).add("M" + mutantNo);
+        }
+
+        return result;
+    }
+
+    private static List<TestCase> applyImpact(List<TestCase> tests, String path) throws Exception {
+        if (!new File(path).exists()) return tests;
+
+        // Нормализуем ключи CIA: org/jsoup/nodes/FormElement,<init>,... -> org.jsoup.nodes.FormElement#init
+        Map<String, Double> scores = new HashMap<>();
+        for (String line : readLines(path)) {
+            String[] p = splitCsv(line);
+            if (p.length < 6) continue;
+            try {
+                String className = p[0].trim().replace('/', '.');
+                // убираем угловые скобки: <init> -> init, <clinit> -> clinit
+                String methodName = p[1].trim().replace("<", "").replace(">", "");
+                String key = className + "#" + methodName;
+                double score = Double.parseDouble(p[5].trim());
+                scores.merge(key, score, Math::max);
+            } catch (NumberFormatException ignored) {}
+        }
+
+        // Нормализуем ключи coverage до того же формата:
+        // "org.jsoup.parser$Parser#Parser(org.jsoup.parser.TreeBuilder):24" -> "org.jsoup.parser.Parser#Parser"
+        return tests.stream().map(t -> {
+            double sum = 0.0; int count = 0;
+            for (String m : t.getCoveredMethods()) {
+                String key = normalizeCoverageKey(m);
+                if (scores.containsKey(key)) { sum += scores.get(key); count++; }
+            }
+            return new TestCase(t.getId(), t.getCoveredMethods(),
+                    count > 0 ? sum / count : 0.0, t.getExecutionTimeMs());
+        }).collect(Collectors.toList());
+    }
+
+    // "org.jsoup.parser$Parser#Parser(org.jsoup.parser.TreeBuilder):24" -> "org.jsoup.parser.Parser#Parser"
+    private static String normalizeCoverageKey(String raw) {
+        String s = raw.replaceAll(":\\d+$", "");   // убираем :24
+        int paren = s.indexOf('(');
+        if (paren >= 0) s = s.substring(0, paren); // убираем параметры
+        return s.replace('$', '.');                 // $ -> . для вложенных классов
+    }
 
 
-Далее приведены формулы \eqref{eq:Pi-app2}, \eqref{eq:Pi-app2-},  \firef{fig:spbpu_hydrotower-app2}, \firef{fig:spbpu_hydrotower-app2-}, \taref{tab:ToyCompare-app2}, \taref{tab:ToyCompare-app2-}.
+    // --- Synthetic data ---
 
+    /**
+     * Генерирует синтетические данные с независимым риском и покрытием.
+     *
+     * Тесты делятся на три группы чтобы GA-FP+Div имел реальное преимущество:
+     *   (30%): большое покрытие, мало фолтов -- жадный выбирает их первыми.
+     *   (20%): малое покрытие, высокий риск и много ключевых фолтов.
+     *   Обычные (50%): покрытие и фолты пропорциональны density.
+     */
+    public static FaultMatrixData generateSynthetic(int numTests, int numFaults, double density) {
+        List<TestCase> tests = new ArrayList<>();
+        Map<String, Set<String>> map = new HashMap<>();
+        Random rng = new Random(42);
 
-\begin{equation}% лучше не оставлять пропущенную строку (\par) перед окружениями для избежания лишних отсупов в pdf
-\label{eq:Pi-app2-} % eq - equations, далее название, ch поставлено для избежания дублирования
-\pi \approx 3,141.
-\end{equation}
+        // первые 40% фолтов считаются "рискованными"
+        int riskFaults = (int)(numFaults * 0.4);
 
-%
-\begin{figure}[ht!] 
-	\center
-	\includegraphics [scale=0.27] {my_folder/images//spbpu_hydrotower}
-	\caption{Вид на гидробашню СПбПУ \cite{spbpu-gallery}} 
-	\label{fig:spbpu_hydrotower-app2-}  
-\end{figure}
+        for (int t = 0; t < numTests; t++) {
+            Set<String> faults = new HashSet<>();
+            double fp;
+            int execTime = 50 + rng.nextInt(150);
+            double roll = rng.nextDouble();
 
-\begin{table} [htbp]% Пример оформления таблицы
-	\centering\small
-	\caption{Представление данных для сквозного примера по ВКР \cite{Peskov2004}}%
-	\label{tab:ToyCompare-app2-}		
-	\begin{tabular}{|l|l|l|l|l|l|}
-		\hline
-		$G$&$m_1$&$m_2$&$m_3$&$m_4$&$K$\\
-		\hline
-		$g_1$&0&1&1&0&1\\ \hline
-		$g_2$&1&2&0&1&1\\ \hline
-		$g_3$&0&1&0&1&1\\ \hline
-		$g_4$&1&2&1&0&2\\ \hline
-		$g_5$&1&1&0&1&2\\ \hline
-		$g_6$&1&1&1&2&2\\ \hline		
-	\end{tabular}	
-	\normalsize% возвращаем шрифт к нормальному
-\end{table}
+            if (roll < 0.30) {
+                // "Ловушка": много обычных фолтов, но не рискованных -- низкий риск
+                for (int f = riskFaults; f < numFaults; f++)
+                    if (rng.nextDouble() < density * 2.5) faults.add("F" + f);
+                fp = 0.05 + rng.nextDouble() * 0.05;
 
+            } else if (roll < 0.50) {
+                // "Жемчужина": мало покрытия, но попадает в рискованные фолты
+                for (int f = 0; f < riskFaults; f++)
+                    if (rng.nextDouble() < density * 1.5) faults.add("F" + f);
+                fp = 0.6 + rng.nextDouble() * 0.4;
 
+            } else {
+                // Обычный тест
+                for (int f = 0; f < numFaults; f++)
+                    if (rng.nextDouble() < density) faults.add("F" + f);
+                fp = numFaults > 0 ? (double) faults.size() / numFaults : 0.0;
+            }
 
+            TestCase tc = new TestCase("T" + t, faults, fp, execTime);
+            tests.add(tc);
+            map.put(tc.getId(), new HashSet<>(faults));
+        }
 
-\section{Параграф приложения}\label{app-2-1}							
+        return new FaultMatrixData(tests, map, numFaults);
+    }
 
+    // --- Utils ---
 
-\subsection{Название подпараграфа} \label{ch2:subsec-title-abbr} %название по-русски
+    // Read file line by line, skip empty lines and header (first line)
+    private static List<String> readLines(String path) throws Exception {
+        List<String> lines = new ArrayList<>();
+        File f = new File(path);
+        if (!f.exists()) return lines;
+        try (BufferedReader br = new BufferedReader(new FileReader(f))) {
+            String line;
+            boolean header = true;
+            while ((line = br.readLine()) != null) {
+                line = line.trim();
+                if (line.isEmpty()) continue;
+                if (header) { header = false; continue; }
+                lines.add(line);
+            }
+        }
+        return lines;
+    }
 
+    // Split CSV line respecting commas inside quotes
+    private static String[] splitCsv(String line) {
+        List<String> tokens = new ArrayList<>();
+        StringBuilder sb = new StringBuilder();
+        boolean inQuotes = false;
+        for (char c : line.toCharArray()) {
+            if (c == '"') inQuotes = !inQuotes;
+            else if (c == ',' && !inQuotes) { tokens.add(sb.toString()); sb.setLength(0); }
+            else sb.append(c);
+        }
+        tokens.add(sb.toString());
+        return tokens.toArray(new String[0]);
+    }
+}
+\end{lstlisting}
 
-Название подпараграфа оформляется с помощью команды  \texttt{\textbackslash{}subsection\{...\}}.
+\begin{lstlisting}[language=Java, breaklines=true]
+package com.tcp.fitness;
 
-Использование подподпараграфов в основной части крайне не рекомендуется.
-\subsubsection{Название подподпараграфа}\label{ch2:subsubsec-title-abbr} %название по-русски
+import com.tcp.model.TestCase;
 
-\begin{equation}% лучше не оставлять пропущенную строку (\par) перед окружениями для избежания лишних отсупов в pdf
-\label{eq:Pi-app2} % eq - equations, далее название, ch поставлено для избежания дублирования
-\pi \approx 3,141.
-\end{equation}
-%
-%
-\begin{figure}[ht!] 
-	\center
-	\includegraphics [scale=0.27] {my_folder/images//spbpu_hydrotower}
-	\caption{Вид на гидробашню СПбПУ \cite{spbpu-gallery}} 
-	\label{fig:spbpu_hydrotower-app2}  
-\end{figure}
-%
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
+/**
+ * Фитнесс-функция для генетического алгоритма.
+ *
+ * Оценивает качество порядка тестов по трём компонентам, каждая в [0, 1]:
+ *   coverage -- доля покрытых уникальных методов от всех в пуле
+ *   faultProneness -- средний риск первых TOP_K тестов
+ *   diversity -- среднее расстояние Жаккара между соседними парами в топ-TOP_K
+ *
+ * Итоговый фитнесс = взвешенная сумма трёх компонент (веса задаются в конструкторе).
+ */
+public class GaFitnessFunction {
 
+    // число тестов в начале последовательности, учитываемых для risk и diversity
+    private static final int TOP_K = 10;
 
+    private final double weightCoverage;
+    private final double weightFaultProneness;
+    private final double weightDiversity;
 
-\begin{table}[t!]% Пример оформления таблицы
-	\centering\small
-	\caption{Представление данных для сквозного примера по ВКР \cite{Peskov2004}}%
-	\label{tab:ToyCompare-app2}		
-	\begin{tabular}{|l|l|l|l|l|l|}
-		\hline
-		$G$&$m_1$&$m_2$&$m_3$&$m_4$&$K$\\
-		\hline
-		$g_1$&0&1&1&0&1\\ \hline
-		$g_2$&1&2&0&1&1\\ \hline
-		$g_3$&0&1&0&1&1\\ \hline
-		$g_4$&1&2&1&0&2\\ \hline
-		$g_5$&1&1&0&1&2\\ \hline
-		$g_6$&1&1&1&2&2\\ \hline		
-	\end{tabular}	
-	\normalsize% возвращаем шрифт к нормальному
-\end{table}
+    public GaFitnessFunction(double weightCoverage, double weightFaultProneness, double weightDiversity) {
+        this.weightCoverage = weightCoverage;
+        this.weightFaultProneness = weightFaultProneness;
+        this.weightDiversity = weightDiversity;
+    }
 
+    // Вычисляет фитнесс последовательности.
+    // totalMethods вычисляется каждый раз из пула - безопасно при смене проектов.
+    public double calculateFitness(List<TestCase> seq) {
+        if (seq.isEmpty()) return 0.0;
 
-%% В случае, когда таблица (рисунок) размещаются на последней странице, для переноса названия приложения на новую строку используем:
-\NewPage % начать новое приложение с новой страницы 
+        Set<String> all = new HashSet<>();
+        for (TestCase t : seq) all.addAll(t.getCoveredMethods());
+        int totalMethods = Math.max(all.size(), 1);
+
+        return weightCoverage      * coverage(seq, totalMethods)
+                + weightFaultProneness * faultProneness(seq)
+                + weightDiversity      * diversity(seq);
+    }
+
+    // Доля уникальных покрытых методов от totalMethods
+    private double coverage(List<TestCase> seq, int totalMethods) {
+        Set<String> covered = new HashSet<>();
+        for (TestCase t : seq) covered.addAll(t.getCoveredMethods());
+        return (double) covered.size() / totalMethods;
+    }
+
+    // Средняя fault-proneness первых TOP_K тестов
+    private double faultProneness(List<TestCase> seq) {
+        int k = Math.min(seq.size(), TOP_K);
+        double sum = 0.0;
+        for (int i = 0; i < k; i++) sum += seq.get(i).getFaultProneness();
+        return sum / k;
+    }
+
+    // Среднее расстояние Жаккара между соседними парами в топ-TOP_K
+    private double diversity(List<TestCase> seq) {
+        int k = Math.min(seq.size(), TOP_K);
+        if (k < 2) return 0.0;
+        double sum = 0.0;
+        for (int i = 0; i < k - 1; i++)
+            sum += jaccard(seq.get(i).getCoveredMethods(), seq.get(i + 1).getCoveredMethods());
+        return sum / (k - 1);
+    }
+
+    // Расстояние Жаккара: 0 = одинаковые, 1 = полностью разные множества
+    private double jaccard(Set<String> a, Set<String> b) {
+        if (a.isEmpty() && b.isEmpty()) return 0.0;
+        if (a.isEmpty() || b.isEmpty()) return 1.0;
+
+        // считаем пересечение без создания нового множества
+        int intersection = 0;
+        for (String s : a) if (b.contains(s)) intersection++;
+        int union = a.size() + b.size() - intersection;
+
+        return 1.0 - (double) intersection / union;
+    }
+}
+\end{lstlisting}
+
+\begin{lstlisting}[language=Java, breaklines=true]
+package com.tcp.metric;
+
+import com.tcp.model.TestCase;
+
+import java.util.*;
+
+/**
+ * Метрика APFD (Average Percentage of Faults Detected).
+ * Оценивает скорость обнаружения дефектов: чем ближе к 1, тем раньше находятся мутанты.
+ *
+ * Формула: APFD = 1 - sumTF / (n * m) + 1 / (2n)
+ *   n -- число тестов
+ *   m -- число мутантов
+ *   sumTF -- сумма позиций первых тестов, обнаруживших каждый мутант
+ */
+public class ApfdCalculator {
+
+    public static double calculate(List<TestCase> orderedTests,
+                                   Map<String, Set<String>> testToMutants,
+                                   int totalMutants) {
+        int n = orderedTests.size();
+        int m = totalMutants;
+        if (n == 0 || m == 0) return 0.0;
+
+        Set<String> detected = new HashSet<>();
+        double sumTF = 0.0;
+
+        for (int i = 0; i < n; i++) {
+            for (String mutant : testToMutants.getOrDefault(orderedTests.get(i).getId(), Collections.emptySet())) {
+                if (detected.add(mutant)) sumTF += (i + 1);
+            }
+        }
+
+        return 1.0 - sumTF / ((double) n * m) + 1.0 / (2.0 * n);
+    }
+}
+\end{lstlisting}
+
+\begin{lstlisting}[language=Java, breaklines=true]
+package com.tcp.metric;
+
+import com.tcp.model.TestCase;
+
+import java.util.*;
+
+/**
+ * Метрика APFDc (APFD with Cost) - APFD с учётом времени выполнения тестов.
+ *
+ * В отличие от APFD, взвешивает обнаружение мутантов по кумулятивному времени:
+ * мутант, найденный быстрым тестом в начале, ценится выше чем найденный медленным в конце.
+ *
+ * Формула: APFDc = sum(totalTime - cumTime_i + execTime_i / 2) / (totalTime * m)
+ *   totalTime -- суммарное время всех тестов
+ *   cumTime_i -- кумулятивное время до конца теста i
+ *   m -- число мутантов
+ */
+public class ApfdCostCalculator {
+
+    public static double calculateWithCost(List<TestCase> orderedTests,
+                                           Map<String, Set<String>> testToMutants,
+                                           int totalMutants) {
+        if (orderedTests.isEmpty() || totalMutants == 0) return 0.0;
+
+        double totalTime = orderedTests.stream().mapToDouble(TestCase::getExecutionTimeMs).sum();
+        Set<String> detected = new HashSet<>();
+        double weightedSum = 0.0;
+        double cumTime = 0.0;
+
+        for (TestCase test : orderedTests) {
+            cumTime += test.getExecutionTimeMs();
+            for (String mutant : testToMutants.getOrDefault(test.getId(), Collections.emptySet())) {
+                if (detected.add(mutant))
+                    weightedSum += totalTime - cumTime + test.getExecutionTimeMs() / 2.0;
+            }
+        }
+
+        return weightedSum / (totalTime * totalMutants);
+    }
+}
+\end{lstlisting}
+
+\begin{lstlisting}[language=Java, breaklines=true]
+    package com.tcp;
+
+import com.tcp.algorithm.AdditionalPrioritizer;
+import com.tcp.algorithm.GeneticPrioritizer;
+import com.tcp.algorithm.Prioritizer;
+import com.tcp.algorithm.RandomPrioritizer;
+import com.tcp.data.DataLoader;
+import com.tcp.data.DataLoader.FaultMatrixData;
+import com.tcp.fitness.GaFitnessFunction;
+import com.tcp.metric.ApfdCalculator;
+import com.tcp.metric.ApfdCostCalculator;
+import com.tcp.model.TestCase;
+
+import java.io.*;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.*;
+
+/**
+ * Точка входа бенчмарка приоритизации регрессионных тестов.
+ *
+ * Алгоритмы:
+ *   Random      -- случайная перестановка (среднее по 5 прогонам)
+ *   Additional  -- жадный baseline по покрытию
+ *   GA-Base     -- ГА только с покрытием (coverage weight = 1.0)
+ *   GA-FP+Div   -- ГА с fault-proneness и диверсификацией (0.4 / 0.4 / 0.2)
+ *
+ * Метрики: APFD, APFDc
+ * Результаты сохраняются в results/results.csv и results/results.json
+ */
+public class Main {
+
+    private static final String BFM_PATH    = "data/bigfaultmatrix/bigfaultmatrix.txt";
+    private static final String RESULTS_DIR = "results";
+    private static final String CSV_PATH    = RESULTS_DIR + "/results.csv";
+    private static final String JSON_PATH   = RESULTS_DIR + "/results.json";
+    private static final int    RANDOM_RUNS = 5;
+
+    private static final List<String> DEFAULT_PROJECTS = List.of(
+            "Jsoup/93", "Csv/16", "JacksonDatabind/112",
+            "Time/27", "Codec/18", "JacksonCore/26", "Lang/65"
+    );
+
+    // Хранит все результаты текущей сессии для записи в файлы
+    private static final List<ResultRow> allResults = new ArrayList<>();
+
+    public static void main(String[] args) {
+        initResultsDir();
+        Scanner sc = new Scanner(System.in);
+        System.out.println("=== TCP Benchmark ===");
+
+        while (true) {
+            System.out.println("\n1. BigFaultMatrix (4 вариации)");
+            System.out.println("2. Defects4J");
+            System.out.println("3. Синтетические данные");
+            System.out.println("4. Все Defects4J проекты");
+            System.out.println("0. Выход");
+            System.out.print("Выбор: ");
+            String choice = sc.nextLine().trim();
+
+            switch (choice) {
+                case "1": runBigFaultMatrix(); break;
+                case "2":
+                    System.out.print("Путь к проекту (например data/raw/Jsoup/93): ");
+                    String path = sc.nextLine().trim();
+                    runBenchmark(path, loadOrNull(() -> DataLoader.loadDefects4JData(path)));
+                    break;
+                case "3": runBenchmark("synthetic", runSynthetic(sc)); break;
+                case "4": runAllProjects(sc); break;
+                case "0":
+                    saveResults();
+                    sc.close();
+                    return;
+                default: System.out.println("Введите 0-4.");
+            }
+
+            System.out.print("\nНажмите Enter...");
+            sc.nextLine();
+        }
+    }
+
+    // --- Прогоны ---
+
+    private static void runBigFaultMatrix() {
+        FaultMatrixData original = loadOrNull(() -> DataLoader.loadFaultMatrix(BFM_PATH));
+        if (original == null) return;
+
+        System.out.println("\n=== BigFaultMatrix: 4 вариации ===");
+
+        String[] labels = { "BFM-original", "BFM-flip10", "BFM-flip20", "BFM-flip30" };
+        double[] flips  = { 0.0, 0.1, 0.2, 0.3 };
+        long[]   seeds  = { 0L,  1L,  2L,  3L  };
+
+        System.out.printf("%n%-22s | %-8s | %-8s | %-8s | %-8s | %s%n",
+                "Вариация", "Random", "Additional", "GA-Base", "GA-FP+Div", "Лучший");
+        System.out.println("-".repeat(82));
+
+        for (int v = 0; v < 4; v++) {
+            FaultMatrixData data = (v == 0)
+                    ? original
+                    : DataLoader.createVariation(original, flips[v], seeds[v]);
+
+            int gens = adaptiveGens(data.tests.size());
+            Map<String, double[]> metrics = collectMetrics(data, gens);
+
+            double[] rnd = metrics.get("Random");
+            double[] add = metrics.get("Additional");
+            double[] gab = metrics.get("GA-Base");
+            double[] gaf = metrics.get("GA-FP+Div");
+
+            String best = bestName(new double[]{rnd[0], add[0], gab[0], gaf[0]},
+                    new String[]{"Random", "Additional", "GA-Base", "GA-FP+Div"});
+
+            System.out.printf("%-22s | %-8.4f | %-8.4f | %-8.4f | %-8.4f | %s%n",
+                    labels[v], rnd[0], add[0], gab[0], gaf[0], best);
+
+            allResults.add(new ResultRow(labels[v], data.tests.size(), data.totalFaults,
+                    rnd[0], rnd[1], add[0], add[1], gab[0], gab[1], gaf[0], gaf[1]));
+        }
+        System.out.println("-".repeat(82));
+    }
+
+    private static FaultMatrixData runSynthetic(Scanner sc) {
+        int tests   = readInt(sc,    "Тестов (100): ",   100);
+        int faults  = readInt(sc,    "Фолтов (50): ",     50);
+        double dens = readDouble(sc, "Плотность (0.1): ", 0.1);
+        return DataLoader.generateSynthetic(tests, faults, dens);
+    }
+
+    private static void runBenchmark(String label, FaultMatrixData data) {
+        if (data == null || data.tests.isEmpty() || data.totalFaults == 0) {
+            System.err.println("Нет данных для бенчмарка.");
+            return;
+        }
+
+        int gens = adaptiveGens(data.tests.size());
+        System.out.printf("  Поколений ГА: %d%n", gens);
+
+        Map<String, double[]> metrics = collectMetrics(data, gens);
+        printResults(metrics);
+
+        double[] rnd = metrics.get("Random");
+        double[] add = metrics.get("Additional");
+        double[] gab = metrics.get("GA-Base");
+        double[] gaf = metrics.get("GA-FP+Div");
+
+        allResults.add(new ResultRow(label, data.tests.size(), data.totalFaults,
+                rnd[0], rnd[1], add[0], add[1], gab[0], gab[1], gaf[0], gaf[1]));
+    }
+
+    private static void runAllProjects(Scanner sc) {
+        System.out.print("Базовый путь к данным (например data/raw): ");
+        String base = sc.nextLine().trim();
+
+        System.out.println("\n=== ПАКЕТНЫЙ ЗАПУСК ===");
+        System.out.printf("%-25s | %-8s | %-8s | %-8s | %-8s | %s%n",
+                "Проект", "Random", "Additional", "GA-Base", "GA-FP+Div", "Лучший");
+        System.out.println("-".repeat(82));
+
+        for (String project : DEFAULT_PROJECTS) {
+            FaultMatrixData data = loadOrNull(() -> DataLoader.loadDefects4JData(base + "/" + project));
+
+            if (data == null || data.tests.isEmpty() || data.totalFaults == 0) {
+                System.out.printf("%-25s | ПРОПУЩЕН%n", project);
+                continue;
+            }
+
+            int gens = adaptiveGens(data.tests.size());
+            Map<String, double[]> metrics = collectMetrics(data, gens);
+
+            double[] rnd = metrics.get("Random");
+            double[] add = metrics.get("Additional");
+            double[] gab = metrics.get("GA-Base");
+            double[] gaf = metrics.get("GA-FP+Div");
+
+            String best = bestName(new double[]{rnd[0], add[0], gab[0], gaf[0]},
+                    new String[]{"Random", "Additional", "GA-Base", "GA-FP+Div"});
+
+            System.out.printf("%-25s | %-8.4f | %-8.4f | %-8.4f | %-8.4f | %s%n",
+                    project, rnd[0], add[0], gab[0], gaf[0], best);
+
+            allResults.add(new ResultRow(project, data.tests.size(), data.totalFaults,
+                    rnd[0], rnd[1], add[0], add[1], gab[0], gab[1], gaf[0], gaf[1]));
+        }
+        System.out.println("-".repeat(82));
+    }
+
+    // --- Сбор метрик ---
+
+    // Запускает все алгоритмы и возвращает Map: algorithmName -> [apfd, apfdc]
+    private static Map<String, double[]> collectMetrics(FaultMatrixData data, int gens) {
+        Map<String, double[]> result = new LinkedHashMap<>();
+
+        // Random: среднее по RANDOM_RUNS прогонам
+        double sumApfd = 0, sumApfdc = 0;
+        for (int r = 0; r < RANDOM_RUNS; r++) {
+            List<TestCase> ordered = new RandomPrioritizer(r).prioritize(new ArrayList<>(data.tests));
+            sumApfd  += ApfdCalculator.calculate(ordered, data.testToFaults, data.totalFaults);
+            sumApfdc += ApfdCostCalculator.calculateWithCost(ordered, data.testToFaults, data.totalFaults);
+        }
+        result.put("Random", new double[]{ sumApfd / RANDOM_RUNS, sumApfdc / RANDOM_RUNS });
+
+        // Additional, GA-Base, GA-FP+Div
+        List<String> names = List.of("Additional", "GA-Base", "GA-FP+Div");
+        List<Prioritizer> algorithms = new ArrayList<>();
+        algorithms.add(new AdditionalPrioritizer());
+        algorithms.add(new GeneticPrioritizer(100, gens, 0.8, 0.2, new GaFitnessFunction(1.0, 0.0, 0.0)));
+        algorithms.add(new GeneticPrioritizer(100, gens, 0.8, 0.2, new GaFitnessFunction(0.4, 0.4, 0.2)));
+
+        for (int i = 0; i < algorithms.size(); i++) {
+            List<TestCase> ordered = algorithms.get(i).prioritize(new ArrayList<>(data.tests));
+            double apfd  = ApfdCalculator.calculate(ordered, data.testToFaults, data.totalFaults);
+            double apfdc = ApfdCostCalculator.calculateWithCost(ordered, data.testToFaults, data.totalFaults);
+            result.put(names.get(i), new double[]{ apfd, apfdc });
+            // сохраняем упорядоченный список для вывода топ-3
+            orderedResults.put(names.get(i), ordered);
+        }
+        // Random топ-3: берём первый прогон
+        orderedResults.put("Random",
+                new RandomPrioritizer(0).prioritize(new ArrayList<>(data.tests)));
+
+        return result;
+    }
+
+    // хранит упорядоченные списки тестов для вывода топ-3
+    private static final Map<String, List<TestCase>> orderedResults = new LinkedHashMap<>();
+
+    private static void printResults(Map<String, double[]> metrics) {
+        System.out.println("\n--- РЕЗУЛЬТАТЫ ---");
+        System.out.printf("%-20s | %-8s | %-8s%n", "Алгоритм", "APFD", "APFDc");
+        System.out.println("-".repeat(42));
+
+        String bestName = null; double bestApfd = -1;
+        for (Map.Entry<String, double[]> e : metrics.entrySet()) {
+            System.out.printf("%-20s | %-8.4f | %-8.4f%n", e.getKey(), e.getValue()[0], e.getValue()[1]);
+            if (e.getValue()[0] > bestApfd) { bestApfd = e.getValue()[0]; bestName = e.getKey(); }
+        }
+        System.out.println("-".repeat(42));
+        System.out.printf("Лучший: %s (APFD = %.4f)%n", bestName, bestApfd);
+
+        // Топ-3 тестов для каждого алгоритма
+        System.out.println("\n--- ТОП-3 ТЕСТОВ ---");
+        for (Map.Entry<String, List<TestCase>> e : orderedResults.entrySet()) {
+            System.out.printf("%n%s:%n", e.getKey());
+            System.out.printf("  %-12s | %-8s | %-10s%n", "Тест", "Risk", "Coverage");
+            System.out.println("  " + "-".repeat(36));
+            List<TestCase> ordered = e.getValue();
+            for (int i = 0; i < Math.min(3, ordered.size()); i++) {
+                TestCase t = ordered.get(i);
+                System.out.printf("  %-12s | %-8.3f | %d%n",
+                        t.getId(), t.getFaultProneness(),
+                        t.getCoveredMethods().size());
+            }
+        }
+        orderedResults.clear();
+    }
+
+    // --- Сохранение результатов ---
+
+    private static void saveResults() {
+        if (allResults.isEmpty()) return;
+        try {
+            new File(RESULTS_DIR).mkdirs();
+            saveCsv();
+            saveJson();
+            System.out.println("\nРезультаты сохранены:");
+            System.out.println("  CSV:  " + CSV_PATH);
+            System.out.println("  JSON: " + JSON_PATH);
+        } catch (Exception e) {
+            System.err.println("Ошибка сохранения: " + e.getMessage());
+        }
+    }
+
+    private static void saveCsv() throws Exception {
+        // Используем ; как разделитель - Excel в русской локали ожидает именно его
+        // sep= в первой строке подсказывает Excel какой разделитель использован
+        boolean exists = new File(CSV_PATH).exists();
+        try (PrintWriter pw = new PrintWriter(
+                new OutputStreamWriter(new FileOutputStream(CSV_PATH, true), "UTF-8"))) {
+            if (!exists) {
+                pw.println("sep=;");  // директива для Excel - автоматически выберет разделитель
+                pw.println("timestamp;dataset;tests;faults;" +
+                        "random_apfd;random_apfdc;" +
+                        "additional_apfd;additional_apfdc;" +
+                        "gabase_apfd;gabase_apfdc;" +
+                        "gafpdiv_apfd;gafpdiv_apfdc");
+            }
+            String ts = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
+            for (ResultRow r : allResults)
+                pw.printf("%s;%s;%d;%d;%.4f;%.4f;%.4f;%.4f;%.4f;%.4f;%.4f;%.4f%n",
+                        ts, r.dataset, r.tests, r.faults,
+                        r.randomApfd, r.randomApfdc,
+                        r.addApfd, r.addApfdc,
+                        r.gaBaseApfd, r.gaBaseApfdc,
+                        r.gaFpApfd, r.gaFpApfdc);
+        }
+    }
+
+    private static void saveJson() throws Exception {
+        String ts = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
+        StringBuilder sb = new StringBuilder("[\n");
+        for (int i = 0; i < allResults.size(); i++) {
+            ResultRow r = allResults.get(i);
+            sb.append("  {\n");
+            sb.append(String.format("    \"timestamp\": \"%s\",\n", ts));
+            sb.append(String.format("    \"dataset\": \"%s\",\n", r.dataset));
+            sb.append(String.format("    \"tests\": %d,\n", r.tests));
+            sb.append(String.format("    \"faults\": %d,\n", r.faults));
+            sb.append(String.format("    \"Random\":     {\"apfd\": %.4f, \"apfdc\": %.4f},\n", r.randomApfd, r.randomApfdc));
+            sb.append(String.format("    \"Additional\": {\"apfd\": %.4f, \"apfdc\": %.4f},\n", r.addApfd, r.addApfdc));
+            sb.append(String.format("    \"GA-Base\":    {\"apfd\": %.4f, \"apfdc\": %.4f},\n", r.gaBaseApfd, r.gaBaseApfdc));
+            sb.append(String.format("    \"GA-FP+Div\": {\"apfd\": %.4f, \"apfdc\": %.4f}\n", r.gaFpApfd, r.gaFpApfdc));
+            sb.append(i < allResults.size() - 1 ? "  },\n" : "  }\n");
+        }
+        sb.append("]");
+        try (PrintWriter pw = new PrintWriter(new FileWriter(JSON_PATH))) {
+            pw.print(sb);
+        }
+    }
+
+    // --- Вспомогательные методы ---
+
+    private static int adaptiveGens(int n) {
+        return Math.max(50, (int)(Math.log(n) / Math.log(2)) * 10);
+    }
+
+    private static String bestName(double[] apfds, String[] names) {
+        int best = 0;
+        for (int i = 1; i < apfds.length; i++) if (apfds[i] > apfds[best]) best = i;
+        return names[best];
+    }
+
+    private static void initResultsDir() {
+        new File(RESULTS_DIR).mkdirs();
+    }
+
+    private static FaultMatrixData loadOrNull(ThrowingSupplier<FaultMatrixData> supplier) {
+        try { return supplier.get(); }
+        catch (Exception e) { System.err.println("Ошибка загрузки: " + e.getMessage()); return null; }
+    }
+
+    private static int readInt(Scanner sc, String prompt, int defaultVal) {
+        System.out.print(prompt);
+        String s = sc.nextLine().trim();
+        return s.isEmpty() ? defaultVal : Integer.parseInt(s);
+    }
+
+    private static double readDouble(Scanner sc, String prompt, double defaultVal) {
+        System.out.print(prompt);
+        String s = sc.nextLine().trim();
+        return s.isEmpty() ? defaultVal : Double.parseDouble(s);
+    }
+
+    @FunctionalInterface
+    private interface ThrowingSupplier<T> { T get() throws Exception; }
+
+    // --- Модель строки результата ---
+
+    private static class ResultRow {
+        final String dataset;
+        final int tests, faults;
+        final double randomApfd, randomApfdc;
+        final double addApfd, addApfdc;
+        final double gaBaseApfd, gaBaseApfdc;
+        final double gaFpApfd, gaFpApfdc;
+
+        ResultRow(String dataset, int tests, int faults,
+                  double randomApfd, double randomApfdc,
+                  double addApfd, double addApfdc,
+                  double gaBaseApfd, double gaBaseApfdc,
+                  double gaFpApfd, double gaFpApfdc) {
+            this.dataset = dataset; this.tests = tests; this.faults = faults;
+            this.randomApfd = randomApfd; this.randomApfdc = randomApfdc;
+            this.addApfd = addApfd; this.addApfdc = addApfdc;
+            this.gaBaseApfd = gaBaseApfd; this.gaBaseApfdc = gaBaseApfdc;
+            this.gaFpApfd = gaFpApfd; this.gaFpApfdc = gaFpApfdc;
+        }
+    }
+}
+\end{lstlisting}

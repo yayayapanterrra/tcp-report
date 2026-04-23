@@ -1,0 +1,152 @@
+% $ biblatex auxiliary file $
+% $ biblatex bbl format version 3.3 $
+% Do not modify the above lines!
+%
+% This is an auxiliary file used by the 'biblatex' package.
+% This file may safely be deleted. It will be recreated by
+% biber as required.
+%
+\begingroup
+\makeatletter
+\@ifundefined{ver@biblatex.sty}
+  {\@latex@error
+     {Missing 'biblatex' package}
+     {The bibliography requires the 'biblatex' package.}
+      \aftergroup\endinput}
+  {}
+\endgroup
+
+
+\refsection{0}
+  \datalist[entry]{none/global//global/global/global}
+    \entry{paygude2020}{article}{}{}
+      \name{author}{3}{}{%
+        {{hash=117130b69f41a546ba839aeb5f5db7b5}{%
+           family={Paygude},
+           familyi={P\bibinitperiod},
+           given={Priyanka},
+           giveni={P\bibinitperiod}}}%
+        {{hash=6fc05862f599d9ebb1f91461fccc9a42}{%
+           family={Joshi},
+           familyi={J\bibinitperiod},
+           given={Shashank\bibnamedelima D.},
+           giveni={S\bibinitperiod\bibinitdelim D\bibinitperiod}}}%
+        {{hash=92dc8956949672b906002b8f0684771c}{%
+           family={Joshi},
+           familyi={J\bibinitperiod},
+           given={Manjusha},
+           giveni={M\bibinitperiod}}}%
+      }
+      \strng{namehash}{c4636e1982282703c981e9607a0926dc}
+      \strng{fullhash}{c4636e1982282703c981e9607a0926dc}
+      \strng{fullhashraw}{c4636e1982282703c981e9607a0926dc}
+      \strng{bibnamehash}{c4636e1982282703c981e9607a0926dc}
+      \strng{authorbibnamehash}{c4636e1982282703c981e9607a0926dc}
+      \strng{authornamehash}{c4636e1982282703c981e9607a0926dc}
+      \strng{authorfullhash}{c4636e1982282703c981e9607a0926dc}
+      \strng{authorfullhashraw}{c4636e1982282703c981e9607a0926dc}
+      \field{sortinit}{1}
+      \field{sortinithash}{4f6aaa89bab872aa0999fec09ff8e98a}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{journaltitle}{International Journal of Emerging Trends in Engineering Research}
+      \field{number}{5}
+      \field{title}{Fault Aware Test Case Prioritization in Regression Testing using Genetic Algorithm}
+      \field{volume}{8}
+      \field{year}{2020}
+      \field{pages}{2112\bibrangedash 2117}
+      \range{pages}{6}
+      \verb{doi}
+      \verb 10.30534/ijeter/2020/104852020
+      \endverb
+    \endentry
+    \entry{mahdieh2021}{article}{}{}
+      \name{author}{4}{}{%
+        {{hash=6e654ee8331c2c07a3a94e8b63869aca}{%
+           family={Mahdieh},
+           familyi={M\bibinitperiod},
+           given={Mojtaba},
+           giveni={M\bibinitperiod}}}%
+        {{hash=fbc1dabbe2799813f36fe72cef9527e3}{%
+           family={Mirian-Hosseinabadi},
+           familyi={M\bibinithyphendelim H\bibinitperiod},
+           given={Seyed-Hassan},
+           giveni={S\bibinithyphendelim H\bibinitperiod}}}%
+        {{hash=3cae3f6c824ee4229ecde069a946c4fd}{%
+           family={Etemadi},
+           familyi={E\bibinitperiod},
+           given={Keyvan},
+           giveni={K\bibinitperiod}}}%
+        {{hash=8c81cb298d10052ba2d8924535965cac}{%
+           family={Bohlouli},
+           familyi={B\bibinitperiod},
+           given={Mahdi},
+           giveni={M\bibinitperiod}}}%
+      }
+      \strng{namehash}{4dcaa5af6147c4040b9d3e092de51f85}
+      \strng{fullhash}{e869b1ec4f53425e6a3492a675b99146}
+      \strng{fullhashraw}{e869b1ec4f53425e6a3492a675b99146}
+      \strng{bibnamehash}{4dcaa5af6147c4040b9d3e092de51f85}
+      \strng{authorbibnamehash}{4dcaa5af6147c4040b9d3e092de51f85}
+      \strng{authornamehash}{4dcaa5af6147c4040b9d3e092de51f85}
+      \strng{authorfullhash}{e869b1ec4f53425e6a3492a675b99146}
+      \strng{authorfullhashraw}{e869b1ec4f53425e6a3492a675b99146}
+      \field{sortinit}{2}
+      \field{sortinithash}{8b555b3791beccb63322c22f3320aa9a}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{journaltitle}{Information and Software Technology}
+      \field{title}{Incorporating Fault-Proneness Estimations into Coverage-Based Test Case Prioritization}
+      \field{volume}{133}
+      \field{year}{2021}
+      \field{pages}{106483}
+      \range{pages}{1}
+      \verb{doi}
+      \verb 10.1016/j.infsof.2021.106483
+      \endverb
+    \endentry
+    \entry{elbaum2002}{article}{}{}
+      \name{author}{3}{}{%
+        {{hash=31664d49e56e89a491d910b2042077aa}{%
+           family={Elbaum},
+           familyi={E\bibinitperiod},
+           given={Sebastian},
+           giveni={S\bibinitperiod}}}%
+        {{hash=e46d91ae41c5bf1bea235cb9a01dfe6f}{%
+           family={Malishevsky},
+           familyi={M\bibinitperiod},
+           given={Alexey\bibnamedelima G.},
+           giveni={A\bibinitperiod\bibinitdelim G\bibinitperiod}}}%
+        {{hash=7cc129d17e090cbb4f857f945a508bf2}{%
+           family={Rothermel},
+           familyi={R\bibinitperiod},
+           given={Gregg},
+           giveni={G\bibinitperiod}}}%
+      }
+      \strng{namehash}{4d2974616221f3a02a19ff3883a68ce2}
+      \strng{fullhash}{4d2974616221f3a02a19ff3883a68ce2}
+      \strng{fullhashraw}{4d2974616221f3a02a19ff3883a68ce2}
+      \strng{bibnamehash}{4d2974616221f3a02a19ff3883a68ce2}
+      \strng{authorbibnamehash}{4d2974616221f3a02a19ff3883a68ce2}
+      \strng{authornamehash}{4d2974616221f3a02a19ff3883a68ce2}
+      \strng{authorfullhash}{4d2974616221f3a02a19ff3883a68ce2}
+      \strng{authorfullhashraw}{4d2974616221f3a02a19ff3883a68ce2}
+      \field{sortinit}{3}
+      \field{sortinithash}{ad6fe7482ffbd7b9f99c9e8b5dccd3d7}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{journaltitle}{IEEE Transactions on Software Engineering}
+      \field{number}{2}
+      \field{title}{Test Case Prioritization: A Family of Empirical Studies}
+      \field{volume}{28}
+      \field{year}{2002}
+      \field{pages}{159\bibrangedash 182}
+      \range{pages}{24}
+      \verb{doi}
+      \verb 10.1109/32.988497
+      \endverb
+    \endentry
+  \enddatalist
+\endrefsection
+\endinput
+

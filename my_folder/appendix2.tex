@@ -1,73 +1,2514 @@
-\chapter{Некоторые дополнительные примеры}\label{appendix-extra-examples}							% 
+\chapter{Программный код\label{appendix-extra-examples}}							% 
 
-В приложении приведены формулы \eqref{eq:Pi-app}, \eqref{eq:Pi-app-}, \firef{fig:spbpu_hydrotower-app}, \firef{fig:spbpu_hydrotower-app-}, \taref{tab:ToyCompare-app}, \taref{tab:ToyCompare-app-}\footnote{Внимание! Пример оформления подстрочной ссылки (сноски).}.
+\begin{verbatim}
+	##LoopStatisticsAlgorithm
+package algorithms;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+
+public class LoopStatisticsAlgorithm implements StatisticsAlgorithm {
+
+    @Override
+    public String getName() {
+        return "Loop-based (Imperative)";
+    }
+
+    @Override
+    public double min(List<Double> data) {
+        if (data.isEmpty()) throw new RuntimeException("Пустая выборка");
+        double min = Double.MAX_VALUE;
+        for (double x : data) {
+            if (x < min) min = x;
+        }
+        return min;
+    }
+
+    @Override
+    public double max(List<Double> data) {
+        if (data.isEmpty()) throw new RuntimeException("Пустая выборка");
+        double max = -Double.MAX_VALUE;
+        for (double x : data) {
+            if (x > max) max = x;
+        }
+        return max;
+    }
+
+    @Override
+    public double mean(List<Double> data) {
+        if (data.isEmpty()) throw new RuntimeException("Пустая выборка");
+        double sum = 0.0;
+        for (double x : data) {
+            sum += x;
+        }
+        return sum / data.size();
+    }
+
+    @Override
+    public double median(List<Double> data) {
+        if (data.isEmpty()) throw new RuntimeException("Пустая выборка");
+        List<Double> temp = new ArrayList<>(data);
+        Collections.sort(temp);
+        int n = temp.size();
+        int mid = n / 2;
+        if (n % 2 == 0) {
+            return (temp.get(mid - 1) + temp.get(mid)) / 2.0;
+        } else {
+            return temp.get(mid);
+        }
+    }
+
+    @Override
+    public double variance(List<Double> data) {
+        if (data.isEmpty()) throw new RuntimeException("Пустая выборка");
+        if (data.size() < 2) throw new RuntimeException("Недостаточно данных");
+        double m = mean(data);
+        double sum = 0.0;
+        for (double x : data) {
+            sum += (x - m) * (x - m);
+        }
+        return sum / (data.size() - 1);
+    }
+
+    @Override
+    public double skewness(List<Double> data) {
+        if (data.isEmpty()) throw new RuntimeException("Пустая выборка");
+        double m = mean(data);
+        double v = variance(data);
+        double sum = 0.0;
+        for (double x : data) {
+            sum += Math.pow(x - m, 3);
+        }
+        return sum / data.size() / Math.pow(v, 1.5);
+    }
+
+    @Override
+    public double kurtosis(List<Double> data) {
+        int n = data.size();
+        if (n < 4) throw new RuntimeException("Недостаточно данных для эксцесса");
+        double sum1 = 0.0;
+        for (double x : data) sum1 += x;
+        double mean = sum1 / n;
+        double sx2 = 0.0;
+        double sum4 = 0.0;
+        for (double x : data) {
+            double d = x - mean;
+            sx2 += d * d;
+            sum4 += d * d * d * d;
+        }
+        sx2 /= (n - 1);
+        if (sx2 == 0.0) throw new RuntimeException("Дисперсия равна нулю");
+        double sum4Norm = sum4 / Math.pow(sx2, 2);
+        return (n * (n + 1.0) / ((n - 1) * (n - 2) * (n - 3))) * sum4Norm
+                - 3.0 * (n - 1) * (n - 1) / ((n - 2) * (n - 3));
+    }
+	
+
+##StatisticsAlgorithm
+package algorithms;
+
+import java.util.List;
+
+public interface StatisticsAlgorithm {
+
+    double min(List<Double> data);
+
+    double max(List<Double> data);
+
+    double mean(List<Double> data);
+
+    double median(List<Double> data);
+
+    double variance(List<Double> data);
+
+    double skewness(List<Double> data);
+
+    double kurtosis(List<Double> data);
+
+    String getName();
+}
+
+##StreamStatisticsAlgorithm
+package algorithms;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+
+public class StreamStatisticsAlgorithm implements StatisticsAlgorithm {
+
+    @Override
+    public String getName() {
+        return "Stream-based (Functional)";
+    }
+
+    @Override
+    public double min(List<Double> data) {
+        if (data.isEmpty()) throw new RuntimeException("Пустая выборка");
+        return data.stream().mapToDouble(Double::doubleValue).min().orElseThrow();
+    }
+
+    @Override
+    public double max(List<Double> data) {
+        if (data.isEmpty()) throw new RuntimeException("Пустая выборка");
+        return data.stream().mapToDouble(Double::doubleValue).max().orElseThrow();
+    }
+
+    @Override
+    public double mean(List<Double> data) {
+        if (data.isEmpty()) throw new RuntimeException("Пустая выборка");
+        return data.stream().mapToDouble(Double::doubleValue).average().orElseThrow();
+    }
+
+    @Override
+    public double median(List<Double> data) {
+        if (data.isEmpty()) throw new RuntimeException("Пустая выборка");
+        List<Double> temp = new ArrayList<>(data);
+        Collections.sort(temp);
+        int n = temp.size();
+        int mid = n / 2;
+        if (n % 2 == 0) {
+            return (temp.get(mid - 1) + temp.get(mid)) / 2.0;
+        } else {
+            return temp.get(mid);
+        }
+    }
+
+    @Override
+    public double variance(List<Double> data) {
+        if (data.isEmpty()) throw new RuntimeException("Пустая выборка");
+        if (data.size() < 2) throw new RuntimeException("Недостаточно данных");
+        double m = mean(data);
+        double sum = data.stream()
+                .mapToDouble(x -> (x - m) * (x - m))
+                .sum();
+        return sum / (data.size() - 1);
+    }
+
+    @Override
+    public double skewness(List<Double> data) {
+        if (data.isEmpty()) throw new RuntimeException("Пустая выборка");
+        double m = mean(data);
+        double v = variance(data);
+        double sum = data.stream()
+                .mapToDouble(x -> Math.pow(x - m, 3))
+                .sum();
+        return sum / data.size() / Math.pow(v, 1.5);
+    }
+
+    @Override
+    public double kurtosis(List<Double> data) {
+        int n = data.size();
+        if (n < 4) throw new RuntimeException("Недостаточно данных для эксцесса");
+        double mean = data.stream().mapToDouble(Double::doubleValue).average().orElseThrow();
+        double sx2 = data.stream()
+                .mapToDouble(x -> (x - mean) * (x - mean))
+                .sum() / (n - 1);
+        if (sx2 == 0.0) throw new RuntimeException("Дисперсия равна нулю");
+        double sum4 = data.stream()
+                .mapToDouble(x -> {
+                    double d = x - mean;
+                    return d * d * d * d;
+                })
+                .sum();
+        double sum4Norm = sum4 / Math.pow(sx2, 2);
+        return (n * (n + 1.0) / ((n - 1) * (n - 2) * (n - 3))) * sum4Norm
+                - 3.0 * (n - 1) * (n - 1) / ((n - 2) * (n - 3));
+    }
 
 
-\begin{equation}% лучше не оставлять пропущенную строку (\par) перед окружениями для избежания лишних отсупов в pdf
-\label{eq:Pi-app-} % eq - equations, далее название, ch поставлено для избежания дублирования
-\pi \approx 3,141.
-\end{equation}
-%
-%
-\begin{figure}[ht!] 
-	\center
-	\includegraphics [scale=0.27] {my_folder/images//spbpu_hydrotower}
-	\caption{Вид на гидробашню СПбПУ \cite{spbpu-gallery}} 
-	\label{fig:spbpu_hydrotower-app-}  
-\end{figure}
+##SampleData
+package json;
 
-\begin{table} [htbp]% Пример оформления таблицы
-	\centering\small
-	\caption{Представление данных для сквозного примера по ВКР \cite{Peskov2004}}%
-	\label{tab:ToyCompare-app-}		
-	\begin{tabular}{|l|l|l|l|l|l|}
-		\hline
-		$G$&$m_1$&$m_2$&$m_3$&$m_4$&$K$\\
-		\hline
-		$g_1$&0&1&1&0&1\\ \hline
-		$g_2$&1&2&0&1&1\\ \hline
-		$g_3$&0&1&0&1&1\\ \hline
-		$g_4$&1&2&1&0&2\\ \hline
-		$g_5$&1&1&0&1&2\\ \hline
-		$g_6$&1&1&1&2&2\\ \hline		
-	\end{tabular}	
-	\normalsize% возвращаем шрифт к нормальному
-\end{table}
+import java.util.List;
+
+public class SampleData {
+
+    public String sampleType;
+    public List<Double> data;
+    public double minVal;
+    public double maxVal;
+    public double meanVal;
+    public double stddevVal;
+
+    public SampleData() {
+    }
+
+    public SampleData(String sampleType, List<Double> data) {
+        this.sampleType = sampleType;
+        this.data = data;
+    }
+
+    public SampleData withUniformParams(double min, double max) {
+        this.minVal = min;
+        this.maxVal = max;
+        return this;
+    }
+
+    public SampleData withNormalParams(double mean, double stddev) {
+        this.meanVal = mean;
+        this.stddevVal = stddev;
+        return this;
+    }
+}
+
+##ConsoleSample
+package samples;
+
+import json.SampleData;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Scanner;
+
+public class ConsoleSample extends Sample {
+
+    public ConsoleSample() {
+        super();
+    }
+
+    @Override
+    public void generate(int n) {
+        if (n <= 0) {
+            throw new IllegalArgumentException("Размер выборки должен быть положительным");
+        }
+
+        data.clear();
+        Scanner scanner = new Scanner(System.in);
+
+        System.out.println("Введите " + n + " чисел выборки (каждое с новой строки):");
+
+        int count = 0;
+        while (count < n) {
+            if (scanner.hasNextDouble()) {
+                double value = scanner.nextDouble();
+                data.add(value);
+                count++;
+            } else {
+                String invalid = scanner.next();
+                System.out.println("Ошибка ввода. Введите число ещё раз:");
+            }
+        }
+    }
+
+    public void setData(List<Double> values) {
+        data.clear();
+        data.addAll(values);
+    }
+
+    @Override
+    protected SampleData createSampleData() {
+        return new SampleData("ConsoleSample", new ArrayList<>(data));
+    }
+
+    @Override
+    protected void restoreFromSampleData(SampleData sampleData) {
+    }
+
+    @Override
+    public String toString() {
+        return String.format("ConsoleSample[size=%d]", data.size());
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) return true;
+        if (obj == null || getClass() != obj.getClass()) return false;
+        ConsoleSample that = (ConsoleSample) obj;
+        return data.equals(that.data);
+    }
+
+    @Override
+    public int hashCode() {
+        return data.hashCode();
+    }
+}
+
+##FileSample
+package samples;
+
+import json.SampleData;
+
+import java.util.ArrayList;
+import java.util.List;
+
+public class FileSample extends Sample {
+
+    public FileSample() {
+        super();
+    }
+
+    public FileSample(List<Double> values) {
+        super();
+        this.data.addAll(values);
+    }
+
+    @Override
+    public void generate(int n) {
+    }
+
+    public void setData(List<Double> values) {
+        data.clear();
+        data.addAll(values);
+    }
+
+    @Override
+    protected SampleData createSampleData() {
+        return new SampleData("FileSample", new ArrayList<>(data));
+    }
+
+    @Override
+    protected void restoreFromSampleData(SampleData sampleData) {
+    }
+
+    @Override
+    public String toString() {
+        return String.format("FileSample[size=%d]", data.size());
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) return true;
+        if (obj == null || getClass() != obj.getClass()) return false;
+        FileSample that = (FileSample) obj;
+        return data.equals(that.data);
+    }
+
+    @Override
+    public int hashCode() {
+        return data.hashCode();
+    }
+}
+
+##Main
+package samples;
+
+import algorithms.LoopStatisticsAlgorithm;
+import algorithms.StreamStatisticsAlgorithm;
+import json.*;
+import utils.*;
+import samples.*;
+
+public class Main {
+
+    public static void main(String[] args) {
+        UniformSample uniformSample = null;
+        NormalSample normalSample = null;
+        FileSample fileSample = null;
+        ConsoleSample consoleSample = null;
+
+        while (true) {
+           System.out.println("\n=====================================");
+            System.out.println("       Статистический калькулятор");
+            System.out.println("=====================================");
+            System.out.println("1. Ввести выборку вручную");
+            System.out.println("2. Создать равномерную выборку");
+            System.out.println("3. Создать нормальную выборку");
+            System.out.println("4. Загрузить из JSON");
+            System.out.println("5. Вывести показатели");
+            System.out.println("6. Сохранить в JSON");
+            System.out.println("7. Оценка взаимозависимости двух выборок");
+            System.out.println("8. Выход");
+            System.out.println("=====================================");
+
+            int choice = ReadFunctions.readInt("Выберите пункт меню: ", 0, 10);
+
+            switch (choice) {
+                case 0: {
+                    System.out.println("\n----ТЕСТИРОВАНИЕ----");
+                    System.out.println("Запустите тесты через Maven: mvn test");
+                    break;
+                }
+                case 1: {
+                    int n = ReadFunctions.readInt("Введите количество элементов: ", 1, 100000);
+                    consoleSample = new ConsoleSample();
+                    consoleSample.generate(n);
+                    System.out.println("\nВыборка сохранена");
+                    break;
+                }
+                case 2: {
+                    int n = ReadFunctions.readInt("Размер выборки: ", 1, 100000);
+                    double a = ReadFunctions.readDouble("Минимум: ");
+                    double b = ReadFunctions.readDouble("Максимум: ", a, Double.MAX_VALUE);
+                    uniformSample = new UniformSample(a, b);
+                    uniformSample.generate(n);
+                    System.out.println("Равномерная выборка создана, n = " + n);
+                    break;
+                }
+                case 3: {
+                    int n = ReadFunctions.readInt("Размер выборки: ", 1, 100000);
+                    double mean = ReadFunctions.readDouble("Среднее значение: ");
+                    double stddev = ReadFunctions.readDouble("Стандартное отклонение: ", 0, Double.MAX_VALUE);
+                    normalSample = new NormalSample(mean, stddev);
+                    normalSample.generate(n);
+                    System.out.println("Нормальная выборка создана, n = " + n);
+                    break;
+                }
+                case 4: {
+                    try {
+                        String filename = ReadFunctions.readString("Введите имя файла (.json): ");
+                        SampleData sampleData = JsonUtils.loadFromJson(filename);
+
+                        switch (sampleData.sampleType) {
+                            case "UniformSample":
+                                uniformSample = new UniformSample(sampleData.minVal, sampleData.maxVal);
+                                uniformSample.loadFromJson(filename);
+                                System.out.println("Загружено UniformSample: " + uniformSample.getData().size() + " элементов");
+                                break;
+                            case "NormalSample":
+                                normalSample = new NormalSample(sampleData.meanVal, sampleData.stddevVal);
+                                normalSample.loadFromJson(filename);
+                                System.out.println("Загружено NormalSample: " + normalSample.getData().size() + " элементов");
+                                break;
+                            case "FileSample":
+                            case "ConsoleSample":
+                                fileSample = new FileSample();
+                                fileSample.loadFromJson(filename);
+                                System.out.println("Загружено: " + fileSample.getData().size() + " элементов");
+                                break;
+                            default:
+                                System.out.println("Неизвестный тип выборки: " + sampleData.sampleType);
+                        }
+                    } catch (RuntimeException e) {
+                        System.out.println("Ошибка: " + e.getMessage());
+                    }
+                    break;
+                }
+                case 5: {
+                    if (consoleSample != null) {
+                        System.out.println("\nВведенная выборка:");
+                        consoleSample.showCharact();
+                    }
+                    if (uniformSample != null) {
+                        System.out.println("\nРавномерная выборка:");
+                        uniformSample.showCharact();
+                    }
+                    if (normalSample != null) {
+                        System.out.println("\nНормальная выборка:");
+                        normalSample.showCharact();
+                    }
+                    if (fileSample != null) {
+                        System.out.println("\nВыборка из файла:");
+                        fileSample.showCharact();
+                    }
+                    break;
+                }
+                case 6: {
+                    int sampleChoice = ReadFunctions.readInt(
+                            "\nВыберите выборку для сохранения в JSON: \n1 - Равномерная\n2 - Нормальная\n3 - Из файла\n4 - Введенная\nВведите число: ", 1, 4);
+
+                    Sample selectedSample = pickSample(sampleChoice, uniformSample, normalSample, fileSample, consoleSample);
+
+                    if (selectedSample != null) {
+                        try {
+                            String filename = ReadFunctions.readString("Введите имя файла (.json): ");
+                            selectedSample.saveToJson(filename.endsWith(".json") ? filename : filename + ".json");
+                            System.out.println("Выборка сохранена в JSON");
+                        } catch (RuntimeException e) {
+                            System.out.println("Ошибка: " + e.getMessage());
+                        }
+                    } else {
+                        System.out.println("Сначала создайте выборку");
+                    }
+                    break;
+                }
+                case 7: {
+                    int a = ReadFunctions.readInt(
+                            "Выберите первую выборку:\n1 - Равномерная\n2 - Нормальная\n3 - Из файла\n4 - Введенная\nВыбор: ", 1, 4);
+                    int b = ReadFunctions.readInt("Выберите вторую выборку: ", 1, 4);
+
+                    Sample s1 = pickSample(a, uniformSample, normalSample, fileSample, consoleSample);
+                    Sample s2 = pickSample(b, uniformSample, normalSample, fileSample, consoleSample);
+
+                    if (s1 == null || s2 == null) {
+                        System.out.println("Одна из выборок не существует");
+                        break;
+                    }
+                    try {
+                        double r = StatsUtils.correlation(s1, s2);
+                        System.out.printf("Коэффициент корреляции Пирсона: %.4f%n", r);
+                    } catch (RuntimeException e) {
+                        System.out.println("Ошибка: " + e.getMessage());
+                    }
+                    break;
+                }
+
+                case 8: {
+                    System.out.println("Выход...");
+                    return;
+                }
+                default:
+                    System.out.println("Неверный выбор!");
+                    break;
+            }
+        }
+    }
+
+    private static Sample pickSample(int choice, UniformSample uniform, NormalSample normal, FileSample file, ConsoleSample console) {
+        return switch (choice) {
+            case 1 -> uniform;
+            case 2 -> normal;
+            case 3 -> file;
+            case 4 -> console;
+            default -> null;
+        };
+    }
+}
+
+##NormalSample
+package samples;
+
+import json.SampleData;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Random;
+
+public class NormalSample extends Sample {
+
+    private double meanVal;
+    private double stddevVal;
+
+    private static final Random random = new Random();
+
+    public NormalSample() {
+        super();
+        this.meanVal = 0.0;
+        this.stddevVal = 1.0;
+    }
+
+    public NormalSample(double mean, double stddev) {
+        super();
+        this.meanVal = mean;
+        this.stddevVal = stddev;
+    }
+
+    @Override
+    public void generate(int n) {
+        if (n <= 0) {
+            throw new IllegalArgumentException("Размер выборки должен быть положительным");
+        }
+        if (stddevVal <= 0) {
+            throw new IllegalArgumentException("Стандартное отклонение должно быть положительным");
+        }
+
+        data.clear();
+
+        if (data instanceof ArrayList) {
+            ((ArrayList<Double>) data).ensureCapacity(n);
+        }
+
+        for (int i = 0; i < n; i++) {
+            double randomValue = meanVal + stddevVal * random.nextGaussian();
+            data.add(randomValue);
+        }
+    }
+
+    @Override
+    protected SampleData createSampleData() {
+        return new SampleData("NormalSample", new ArrayList<>(data))
+                .withNormalParams(meanVal, stddevVal);
+    }
+
+    @Override
+    protected void restoreFromSampleData(SampleData sampleData) {
+        this.meanVal = sampleData.meanVal;
+        this.stddevVal = sampleData.stddevVal;
+    }
+
+    public double getMeanVal() {
+        return meanVal;
+    }
+
+    public void setMeanVal(double meanVal) {
+        this.meanVal = meanVal;
+    }
+
+    public double getStddevVal() {
+        return stddevVal;
+    }
+
+    public void setStddevVal(double stddevVal) {
+        this.stddevVal = stddevVal;
+    }
+
+    @Override
+    public String toString() {
+        return String.format("NormalSample[mean=%.2f, stddev=%.2f, size=%d]",
+                meanVal, stddevVal, data.size());
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) return true;
+        if (obj == null || getClass() != obj.getClass()) return false;
+        NormalSample that = (NormalSample) obj;
+        return Double.compare(that.meanVal, meanVal) == 0 &&
+                Double.compare(that.stddevVal, stddevVal) == 0 &&
+                data.equals(that.data);
+    }
+
+    @Override
+    public int hashCode() {
+        int result;
+        long temp;
+        temp = Double.doubleToLongBits(meanVal);
+        result = (int) (temp ^ (temp >>> 32));
+        temp = Double.doubleToLongBits(stddevVal);
+        result = 31 * result + (int) (temp ^ (temp >>> 32));
+        result = 31 * result + data.hashCode();
+        return result;
+    }
+}
+
+##Sample
+package samples;
+
+import algorithms.StatisticsAlgorithm;
+import algorithms.LoopStatisticsAlgorithm;
+import json.SampleData;
+import utils.JsonUtils;
+
+import java.io.*;
+import java.nio.file.*;
+import java.util.*;
+
+public abstract class Sample {
+
+    protected List<Double> data;
+    private StatisticsAlgorithm algorithm = new LoopStatisticsAlgorithm();
+
+    public Sample() {
+        this.data = new ArrayList<>();
+    }
+
+    public Sample(StatisticsAlgorithm algorithm) {
+        this.data = new ArrayList<>();
+        this.algorithm = algorithm;
+    }
+
+    public void setData(List<Double> values){
+        this.data.clear();
+        this.data.addAll(values);
+    }
+
+    public abstract void generate(int n);
+
+    public List<Double> getData() {
+        return Collections.unmodifiableList(data);
+    }
+
+    public void setAlgorithm(StatisticsAlgorithm algorithm) {
+        this.algorithm = algorithm;
+    }
+
+    public StatisticsAlgorithm getAlgorithm() {
+        return this.algorithm;
+    }
+
+    public double min() {
+        return algorithm.min(data);
+    }
+
+    public double max() {
+        return algorithm.max(data);
+    }
+
+    public double mean() {
+        return algorithm.mean(data);
+    }
+
+    public double median() {
+        return algorithm.median(data);
+    }
+
+    public double variance() {
+        return algorithm.variance(data);
+    }
+
+    public double skewness() {
+        return algorithm.skewness(data);
+    }
+
+    public double kurtosis() {
+        return algorithm.kurtosis(data);
+    }
+
+    public List<Double> quartiles() {
+        if (data.isEmpty()) {
+            throw new RuntimeException("Пустая выборка");
+        }
+
+        List<Double> temp = new ArrayList<>(data);
+        Collections.sort(temp);
+
+        int n = temp.size();
+        double q1 = getQuantile(temp, 0.25);
+        double q2 = median();
+        double q3 = getQuantile(temp, 0.75);
+
+        return Arrays.asList(q1, q2, q3);
+    }
+
+    private double getQuantile(List<Double> sortedData, double q) {
+        int n = sortedData.size();
+        double pos = q * (n - 1);
+        int index = (int) pos;
+        double frac = pos - index;
+
+        if (index + 1 < n) {
+            return sortedData.get(index) + frac * (sortedData.get(index + 1) - sortedData.get(index));
+        } else {
+            return sortedData.get(index);
+        }
+    }
+
+    public boolean isNormal(double alpha) {
+        double jb = jarqueBera();
+        double critical;
+
+        if (alpha == 0.10) critical = 4.605;
+        else if (alpha == 0.05) critical = 5.991;
+        else if (alpha == 0.01) critical = 9.210;
+        else throw new RuntimeException("Неподдерживаемый уровень значимости: " + alpha);
+
+        return jb < critical;
+    }
+
+    public double jarqueBera() {
+        if (data.size() < 3) {
+            throw new RuntimeException("Недостаточно данных для теста Jarque-Bera");
+        }
+        double n = (double) data.size();
+        double s = skewness();
+        double k = kurtosis();
+        return (n / 6.0) * (s * s + (k * k) / 4.0);
+    }
+
+    public void saveToFile(String filename) {
+        try (BufferedWriter writer = Files.newBufferedWriter(Paths.get(filename))) {
+            for (double x : data) {
+                writer.write(String.valueOf(x));
+                writer.newLine();
+            }
+        } catch (IOException e) {
+            throw new RuntimeException("Не удалось сохранить файл: " + e.getMessage());
+        }
+    }
+
+    public void loadFromFile(String filename) {
+        data.clear();
+        try (BufferedReader reader = Files.newBufferedReader(Paths.get(filename))) {
+            String line;
+            while ((line = reader.readLine()) != null) {
+                if (!line.trim().isEmpty()) {
+                    data.add(Double.parseDouble(line.trim()));
+                }
+            }
+        } catch (IOException e) {
+            throw new RuntimeException("Не удалось загрузить файл: " + e.getMessage());
+        }
+
+        if (data.isEmpty()) {
+            throw new RuntimeException("Файл пуст или не содержит чисел");
+        }
+    }
+
+    public void saveToJson(String filename) {
+        SampleData sampleData = createSampleData();
+        JsonUtils.saveToJson(sampleData, filename);
+    }
+
+    public void loadFromJson(String filename) {
+        SampleData sampleData = JsonUtils.loadFromJson(filename);
+        data.clear();
+        data.addAll(sampleData.data);
+        restoreFromSampleData(sampleData);
+    }
+
+    protected SampleData createSampleData() {
+        return new SampleData(this.getClass().getSimpleName(), new ArrayList<>(data));
+    }
+
+    protected void restoreFromSampleData(SampleData sampleData) {
+    }
+
+    public void showCharact() {
+        System.out.println("=======================================");
+        System.out.println("  Статистика выборки: " + this.getClass().getSimpleName());
+        System.out.println("  Алгоритм: " + algorithm.getName());
+        System.out.println("=======================================");
+        System.out.println("  Размер выборки: " + data.size());
+        System.out.println("---------------------------------------");
+        System.out.printf("  Минимум:        %.4f%n", this.min());
+        System.out.printf("  Максимум:       %.4f%n", this.max());
+        System.out.printf("  Среднее:        %.4f%n", this.mean());
+        System.out.printf("  Медиана:        %.4f%n", this.median());
+        System.out.println("---------------------------------------");
+
+        List<Double> q = this.quartiles();
+        System.out.printf("  Квартиль 0.25:  %.4f%n", q.get(0));
+        System.out.printf("  Квартиль 0.50:  %.4f%n", q.get(1));
+        System.out.printf("  Квартиль 0.75:  %.4f%n", q.get(2));
+        System.out.println("---------------------------------------");
+
+        System.out.printf("  Дисперсия:      %.4f%n", this.variance());
+        System.out.printf("  Асимметрия:     %.4f%n", this.skewness());
+        System.out.printf("  Эксцесс:        %.4f%n", this.kurtosis());
+        System.out.println("("=======================================");
+
+        try {
+            double jb = this.jarqueBera();
+            boolean isNormal = this.isNormal(0.05);
+            System.out.printf("  Тест Jarque-Bera: %.4f%n", jb);
+            System.out.println("  Нормальность: " + (isNormal ? "не отвергается" : "отвергается"));
+        } catch (Exception e) {
+            System.out.println("  Тест на нормальность: невозможно проверить");
+        }
+        System.out.println("("=======================================");
+    }
+
+    @Override
+    public String toString() {
+        return String.format("%s[size=%d, algorithm=%s]",
+                this.getClass().getSimpleName(),
+                data.size(),
+                algorithm.getName());
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) return true;
+        if (obj == null || getClass() != obj.getClass()) return false;
+        Sample sample = (Sample) obj;
+        return data.equals(sample.data);
+    }
+
+    @Override
+    public int hashCode() {
+        return data.hashCode();
+    }
+}
+
+##UniformSample
+package samples;
+
+import json.SampleData;
+
+import java.util.ArrayList;
+import java.util.List;
+
+public class UniformSample extends Sample {
+
+    private double minVal;
+    private double maxVal;
+
+    public UniformSample() {
+        super();
+        this.minVal = 0.0;
+        this.maxVal = 1.0;
+    }
+
+    public UniformSample(double min, double max) {
+        super();
+        this.minVal = min;
+        this.maxVal = max;
+    }
+
+    @Override
+    public void generate(int n) {
+        if (n <= 0) {
+            throw new IllegalArgumentException("Размер выборки должен быть положительным");
+        }
+        if (minVal >= maxVal) {
+            throw new IllegalArgumentException("minVal должен быть меньше maxVal");
+        }
+
+        data.clear();
+
+        if (data instanceof ArrayList) {
+            ((ArrayList<Double>) data).ensureCapacity(n);
+        }
+
+        for (int i = 0; i < n; i++) {
+            double randomValue = minVal + (maxVal - minVal) * Math.random();
+            data.add(randomValue);
+        }
+    }
+
+    @Override
+    protected SampleData createSampleData() {
+        return new SampleData("UniformSample", new ArrayList<>(data))
+                .withUniformParams(minVal, maxVal);
+    }
+
+    @Override
+    protected void restoreFromSampleData(SampleData sampleData) {
+        this.minVal = sampleData.minVal;
+        this.maxVal = sampleData.maxVal;
+    }
+
+    public double getMinVal() {
+        return minVal;
+    }
+
+    public void setMinVal(double minVal) {
+        this.minVal = minVal;
+    }
+
+    public double getMaxVal() {
+        return maxVal;
+    }
+
+    public void setMaxVal(double maxVal) {
+        this.maxVal = maxVal;
+    }
+
+    @Override
+    public String toString() {
+        return String.format("UniformSample[min=%.2f, max=%.2f, size=%d]",
+                minVal, maxVal, data.size());
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) return true;
+        if (obj == null || getClass() != obj.getClass()) return false;
+        UniformSample that = (UniformSample) obj;
+        return Double.compare(that.minVal, minVal) == 0 &&
+                Double.compare(that.maxVal, maxVal) == 0 &&
+                data.equals(that.data);
+    }
+
+    @Override
+    public int hashCode() {
+        int result;
+        long temp;
+        temp = Double.doubleToLongBits(minVal);
+        result = (int) (temp ^ (temp >>> 32));
+        temp = Double.doubleToLongBits(maxVal);
+        result = 31 * result + (int) (temp ^ (temp >>> 32));
+        result = 31 * result + data.hashCode();
+        return result;
+    }
+}
+
+##JsonUtils
+package utils;
+
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.stream.JsonReader;
+import json.SampleData;
+
+import java.io.*;
+import java.nio.file.*;
+
+public class JsonUtils {
+
+    private static final Gson gson = new GsonBuilder()
+            .setPrettyPrinting()
+            .create();
+
+    private JsonUtils() {
+    }
+
+    public static void saveToJson(SampleData sampleData, String filename) {
+        try (BufferedWriter writer = Files.newBufferedWriter(Paths.get(filename))) {
+            gson.toJson(sampleData, writer);
+        } catch (IOException e) {
+            throw new RuntimeException("Не удалось сохранить JSON: " + e.getMessage());
+        }
+    }
+
+    public static SampleData loadFromJson(String filename) {
+        try (BufferedReader reader = Files.newBufferedReader(Paths.get(filename));
+             JsonReader jsonReader = new JsonReader(reader)) {
+            return gson.fromJson(jsonReader, SampleData.class);
+        } catch (IOException e) {
+            throw new RuntimeException("Не удалось загрузить JSON: " + e.getMessage());
+        }
+    }
+
+    public static String toJson(SampleData sampleData) {
+        return gson.toJson(sampleData);
+    }
+}
+
+##ReadFunctions
+package utils;
+
+import java.util.Scanner;
+
+public class ReadFunctions {
+
+    private static Scanner scanner = new Scanner(System.in);
 
 
+    public static Scanner getScanner(){
+        return scanner;
+    }
+
+    private ReadFunctions() {
+    }
+
+    public static int readInt(String prompt, int min, int max) {
+        int value;
+        while (true) {
+            System.out.print(prompt);
+            if (scanner.hasNextInt()) {
+                value = scanner.nextInt();
+                if (value >= min && value <= max) {
+                    return value;
+                } else {
+                    System.out.println("Число должно быть от " + min + " до " + max);
+                }
+            } else {
+                System.out.println("Неверный ввод. Попробуйте еще раз");
+                scanner.next();
+            }
+        }
+    }
+
+    public static int readInt(String prompt) {
+        return readInt(prompt, Integer.MIN_VALUE, Integer.MAX_VALUE);
+    }
+
+    public static double readDouble(String prompt, double min, double max) {
+        double value;
+        while (true) {
+            System.out.print(prompt);
+            if (scanner.hasNextDouble()) {
+                value = scanner.nextDouble();
+                if (value >= min && value <= max) {
+                    return value;
+                } else {
+                    System.out.println("Число должно быть от " + min + " до " + max);
+                }
+            } else {
+                System.out.println("Неверный ввод. Попробуйте еще раз");
+                scanner.next();
+            }
+        }
+    }
+
+    public static double readDouble(String prompt) {
+        return readDouble(prompt, Double.NEGATIVE_INFINITY, Double.POSITIVE_INFINITY);
+    }
+
+    public static String readString(String prompt) {
+        System.out.print(prompt);
+        return scanner.next();
+    }
+}
+
+##StatsUtils
+package utils;
+
+import samples.Sample;
+
+import java.util.List;
+
+public class StatsUtils {
+
+    private StatsUtils() {
+    }
+
+    public static double correlation(Sample a, Sample b) {
+        List<Double> x = a.getData();
+        List<Double> y = b.getData();
+
+        if (x.size() != y.size()) {
+            throw new RuntimeException("Выборки должны быть одного размера");
+        }
+        if (x.size() < 2) {
+            throw new RuntimeException("Недостаточно данных");
+        }
+
+        double meanX = a.mean();
+        double meanY = b.mean();
+
+        double num = 0.0;
+        double sx = 0.0;
+        double sy = 0.0;
+
+        for (int i = 0; i < x.size(); i++) {
+            double dx = x.get(i) - meanX;
+            double dy = y.get(i) - meanY;
+            num += dx * dy;
+            sx += dx * dx;
+            sy += dy * dy;
+        }
+
+        if (sx == 0.0 || sy == 0.0) {
+            throw new RuntimeException("Нулевая дисперсия одной из выборок");
+        }
+
+        return num / Math.sqrt(sx * sy);
+    }
+}
+
+##LoopStatisticsAlgorithmTest
+package algorithm;
+
+import algorithms.LoopStatisticsAlgorithm;
+import algorithms.StatisticsAlgorithm;
+import algorithms.StreamStatisticsAlgorithm;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.ValueSource;
+import org.mockito.Mockito;
+
+import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assumptions.*;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.*;
+import static org.mockito.Mockito.*;
+
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
+import java.util.ArrayList;
+
+import static org.mockito.ArgumentMatchers.anyList;
 
 
-\section{Подраздел приложения}\label{app-2-1}							
+@DisplayName("Тестирование LoopStatisticsAlgorithm")
+public class LoopStatisticsAlgorithmTest {
+    private final StatisticsAlgorithm loopAlgorithm = new LoopStatisticsAlgorithm();
+    private final StatisticsAlgorithm streamAlgorithm = new StreamStatisticsAlgorithm();
+
+    //ГРАНИЧНЫЕ ЗНАЧЕНИЯ (BoundaryValue)
+    @Test
+    @DisplayName("Граничное значение: пустой список должен выбрасывать исключение")
+    void testMinEmptyList_BoundaryValue() {
+        //граничное значение 0 элементов
+        assertThrows(RuntimeException.class, () -> loopAlgorithm.min(Collections.emptyList()));
+    }
+
+    @Test
+    @DisplayName("Граничное значение: один элемент")
+    void testMinSingleElement_BoundaryValue() {
+        //граничное значение 1 элемент
+        List<Double> data = Collections.singletonList(5.0);
+        double result = loopAlgorithm.min(data);
+        assertEquals(5.0, result, 0.0001);
+    }
+
+    @Test
+    @DisplayName("Граничное значение: 1 элемент для дисперсии должен выбрасывать исключение")
+    void testVarianceOneElement_BoundaryValue() {
+        //меньше минимального: 1 элемент
+        List<Double> data = Collections.singletonList(5.0);
+        assertThrows(RuntimeException.class, () -> loopAlgorithm.variance(data));
+    }
+
+    @Test
+    @DisplayName("Граничное значение: 3 элемента для эксцесса должен выбрасывать исключение")
+    void testKurtosisThreeElements_BoundaryValue() {
+        //меньше минимального: 3 элемента
+        List<Double> data = Arrays.asList(1.0, 2.0, 3.0);
+        assertThrows(RuntimeException.class, () -> loopAlgorithm.kurtosis(data));
+    }
+
+    // КЛАССЫ ЭКВИВАЛЕНТНОСТИ (Equivalence Partitioning)
+    @ParameterizedTest
+    @ValueSource(doubles = {1.0, 5.5, 100.0})
+    @DisplayName("Класс эквивалентности: положительные числа")
+    void testMeanPositiveNumbers_EquivalenceClass(double value) {
+        List<Double> data = Arrays.asList(value, value, value);
+        double result = loopAlgorithm.mean(data);
+        assertThat(result, is(closeTo(value, 0.0001)));
+    }
+
+    @ParameterizedTest
+    @ValueSource(doubles = {-1.0, -5.5, -100.0})
+    @DisplayName("Класс эквивалентности: отрицательные числа")
+    void testMeanNegativeNumbers_EquivalenceClass(double value) {
+        List<Double> data = Arrays.asList(value, value, value);
+        double result = loopAlgorithm.mean(data);
+        assertThat(result, is(closeTo(value, 0.0001)));
+    }
+
+    @Test
+    @DisplayName("Медиана: нечетное количество (3 элемента)")
+    void testMedianOddCount() {
+        List<Double> data = Arrays.asList(1.0, 2.0, 3.0);
+        assertEquals(2.0, loopAlgorithm.median(data), 0.0001);
+    }
+
+    @Test
+    @DisplayName("Медиана: четное количество (4 элемента)")
+    void testMedianEvenCount() {
+        List<Double> data = Arrays.asList(1.0, 2.0, 3.0, 4.0);
+        assertEquals(2.5, loopAlgorithm.median(data), 0.0001);
+    }
+
+    //ПОКРЫТИЕ ОПЕРАТОРОВ (Statement Testing)
+    @Test
+    @DisplayName("Покрытие операторов: все методы должны выполниться")
+    void testAllMethodExecute_StatementCoverage() {
+        List<Double> data = Arrays.asList(1.0, 2.0, 3.0, 4.0, 5.0);
+
+        //каждый метод выполнится хотя бы один раз
+        double min = loopAlgorithm.min(data);
+        double max = loopAlgorithm.max(data);
+        double mean = loopAlgorithm.mean(data);
+        double median = loopAlgorithm.median(data);
+        double variance = loopAlgorithm.variance(data);
+        double skewness = loopAlgorithm.skewness(data);
+        double kurtosis = loopAlgorithm.kurtosis(data);
+        String name = loopAlgorithm.getName();
+
+        //проверка, что все значения получены
+        assertAll("Все методы выполнены успешно",
+                () -> assertNotNull(min),
+                () -> assertNotNull(max),
+                () -> assertNotNull(mean),
+                () -> assertNotNull(median),
+                () -> assertNotNull(variance),
+                () -> assertNotNull(skewness),
+                () -> assertNotNull(kurtosis),
+                () -> assertNotNull(name));
+    }
+
+    //ПОКРЫТИЕ ВЕТВЛЕНИЙ (Branch Testing)
+    @Test
+    @DisplayName("Покрытие ветвлений: медиана для нечетного количества (else)")
+    void testMedianOddCount_BranchCoverage() {
+        //n%2!=0
+        List<Double> data = Arrays.asList(1.0, 3.0, 2.0);
+        double result = loopAlgorithm.median(data);
+        assertEquals(2.0, result, 0.0001);
+    }
+
+    @Test
+    @DisplayName("Покрытие ветвлений: медиана для нечетного количества (if)")
+    void testMedianEvenCount_BranchCoverage() {
+        //n%2==0
+        List<Double> data = Arrays.asList(1.0, 3.0, 2.0, 4.0);
+        double result = loopAlgorithm.median(data);
+        assertEquals(2.5, result, 0.0001);
+    }
+
+    @Test
+    @DisplayName("Покрытие ветвлений: isEmpty() - true/false")
+    void testIsEmpty_BranchCoverage() {
+        //пустой список
+        assertThrows(RuntimeException.class, () -> loopAlgorithm.min(Collections.emptyList()));
+
+        //заполненный список
+        List<Double> data = Collections.singletonList(1.0);
+        assertDoesNotThrow(() -> loopAlgorithm.min(data));
+    }
+
+    //СРАВНЕНИЕ АЛГОРИТМОВ
+    @Test
+    @DisplayName("Сравнение алгоритмов: Loop и Stream должны давать одинаковые результаты")
+    void testLoopVsStreamAlgorithmComparison() {
+        List<Double> data = Arrays.asList(1.0, 5.0, 3.0, 9.0, 2.0, 7.0, 4.0);
+
+        double loopMin = loopAlgorithm.min(data);
+        double streamMin = streamAlgorithm.min(data);
+        assertEquals(loopMin, streamMin, 0.0001, "min должен совпадать");
+
+        double loopMax = loopAlgorithm.max(data);
+        double streamMax = streamAlgorithm.max(data);
+        assertEquals(loopMax, streamMax, 0.0001, "max должен совпадать");
+
+        double loopMean = loopAlgorithm.mean(data);
+        double streamMean = streamAlgorithm.mean(data);
+        assertEquals(loopMean, streamMean, 0.0001, "mean должен совпадать");
+
+        double loopMedian = loopAlgorithm.median(data);
+        double streamMedian = streamAlgorithm.median(data);
+        assertEquals(loopMedian, streamMedian, 0.0001, "median должен совпадать");
+
+        double loopVariance = loopAlgorithm.variance(data);
+        double streamVariance = streamAlgorithm.variance(data);
+        assertEquals(loopVariance, streamVariance, 0.0001, "variance должен совпадать");
+    }
+
+    @ParameterizedTest
+    @ValueSource(ints = {5, 10, 20, 50})
+    @DisplayName("Сравнение алгоритмов на разных размерах выборки")
+    void testLoopVsStreamVariousSizes(int size) {
+        List<Double> data = new ArrayList<>();
+        for (int i = 0; i < size; i++) {
+            data.add((double) i);
+        }
+
+        double loopResult = loopAlgorithm.mean(data);
+        double streamResult = streamAlgorithm.mean(data);
+
+        assertEquals(loopResult, streamResult, 0.0001,
+                "Результаты должны совпадать для размера" + size);
+    }
+
+    //ASSUMPTIONS
+    @Test
+    @DisplayName("Assumption: тест имеет смысл только для положительных размеров")
+    void testWithAssumptionOnSize() {
+        List<Double> data = Arrays.asList(1.0, 2.0, 3.0);
+
+        //предположение: тест имеет смысл только если данных больше 2
+        assumeTrue(data.size() > 2, "Требуется минимум 3 элемента");
+
+        double variance = loopAlgorithm.variance(data);
+        assertTrue(variance >= 0, "Дисперсия не может быть отрицательной");
+    }
+
+    @Test
+    @DisplayName("Assumption: пропускаем тест если выборка пустая")
+    void testWithAssumptionOnEmptyList() {
+        List<Double> data = Arrays.asList(1.0, 2.0, 3.0, 4.0, 5.0);
+
+        //предположение: данные не должны быть пустыми
+        assumeFalse(data.isEmpty(), "Данные не должны быть пустыми");
+
+        double mean = loopAlgorithm.mean(data);
+        assertThat(mean, is(greaterThan(0.0)));
+    }
+
+    //MOCKS
+    @Test
+    @DisplayName("Mock: создание мока StatisticsAlgorithm")
+    void testMockStatisticsAlgorithm() {
+        //создаем пустой мок
+        StatisticsAlgorithm mockAlg = Mockito.mock(StatisticsAlgorithm.class);
+
+        //проверка, что мок создан
+        assertNotNull(mockAlg);
+
+        //вызов метода (возврат default для double-0.0)
+        double result = mockAlg.mean(Collections.emptyList());
+        assertEquals(0.0, result, 0.0001);
+
+    }
+
+    @Test
+    @DisplayName("Stub: настройка поведения мок объекта")
+    void testStubStatisticsAlgorithm() {
+        //stub: мок с настроенным поведением
+        StatisticsAlgorithm stubAlg = Mockito.mock(StatisticsAlgorithm.class);
+
+        //настройка возвращаемого значения
+        when(stubAlg.mean(anyList())).thenReturn(42.0);
+        when(stubAlg.min(anyList())).thenReturn(1.0);
+        when(stubAlg.max(anyList())).thenReturn(100.0);
+
+        //проверка возвращаемых значений
+        assertEquals(42.0, stubAlg.mean(Collections.emptyList()), 0.0001);
+        assertEquals(1.0, stubAlg.min(Collections.emptyList()), 0.0001);
+        assertEquals(100.0, stubAlg.max(Collections.emptyList()), 0.0001);
+
+        verify(stubAlg, times(1)).mean(anyList());
+        verify(stubAlg, times(1)).min(anyList());
+        verify(stubAlg, times(1)).max(anyList());
+    }
+
+    @Test
+    @DisplayName("Spy: шпион на реальном объекте LoopStatisticsAlgorithm")
+    void testSpyStatisticsAlgorithm() {
+        //создаем шпиона на реальном объекте
+        LoopStatisticsAlgorithm spyAlg = Mockito.spy(new LoopStatisticsAlgorithm());
+
+        List<Double> data = Arrays.asList(1.0, 2.0, 3.0, 4.0, 5.0);
+
+        double mean = spyAlg.mean(data);
+        verify(spyAlg, atLeastOnce()).mean(data);
+        assertEquals(3.0, mean, 0.0001);
+    }
+
+    //MATCHERS
+    @Test
+    @DisplayName("Matchers: использование Hamcrest матчеров")
+    void testWithHamcrestMatchers() {
+        List<Double> data = Arrays.asList(1.0, 2.0, 3.0, 4.0, 5.0);
+
+        double mean = loopAlgorithm.mean(data);
+        double min = loopAlgorithm.min(data);
+        double max = loopAlgorithm.max(data);
+
+        //matcher 1 closeTo
+        assertThat(mean, is(closeTo(3.0, 0.0001)));
+
+        //matcher 2 greater/lessthan
+        assertThat(min, lessThan(mean));
+        assertThat(max, greaterThan(mean));
+
+        //matcher 3 equalto
+        assertThat(min, is(equalTo(1.0)));
+        assertThat(max, is(equalTo(5.0)));
+    }
+
+    //НЕГАТИВНЫЕ СЦЕНАРИИ
+    @Test
+    @DisplayName("Негативный сценарий: null должен выбрасывать исключение")
+    void testWithNullData() {
+        assertThrows(NullPointerException.class, () -> loopAlgorithm.mean(null));
+    }
+
+    @Test
+    @DisplayName("Негативный сценарий: эксцесс при нулевой дисперсии")
+    void testKurtosisZeroVariance() {
+        List<Double> data = Arrays.asList(5.0, 5.0, 5.0, 5.0); //дисперсия 0, т.к. элементы одинаковые
+        assertThrows(RuntimeException.class, () -> loopAlgorithm.kurtosis(data));
+    }
+
+    // ==================== МУТАЦИОННЫЕ ТЕСТЫ ====================
+
+    @Test
+    @DisplayName("Мутация: getName должен вернуть точную строку")
+    void testGetNameExact() {
+        assertEquals("Loop-based (Imperative)", loopAlgorithm.getName());
+        assertNotEquals("", loopAlgorithm.getName());
+        assertNotEquals("Stream-based", loopAlgorithm.getName());
+    }
+
+    @Test
+    @DisplayName("Мутация: min с дубликатами минимума")
+    void testMinWithDuplicateValues() {
+        List<Double> data = Arrays.asList(3.0, 1.0, 1.0, 5.0);
+        assertEquals(1.0, loopAlgorithm.min(data), 0.0001);
+    }
+
+    @Test
+    @DisplayName("Мутация: max с дубликатами максимума")
+    void testMaxWithDuplicateValues() {
+        List<Double> data = Arrays.asList(1.0, 5.0, 5.0, 3.0);
+        assertEquals(5.0, loopAlgorithm.max(data), 0.0001);
+    }
+
+    @Test
+    @DisplayName("Мутация: min граничное значение (0 и отрицательное)")
+    void testMinWithZeroAndNegative() {
+        List<Double> data = Arrays.asList(0.0, -5.0, 3.0);
+        assertEquals(-5.0, loopAlgorithm.min(data), 0.0001);
+    }
+
+    @Test
+    @DisplayName("Мутация: max граничное значение (0 и отрицательное)")
+    void testMaxWithZeroAndNegative() {
+        List<Double> data = Arrays.asList(0.0, -5.0, 3.0);
+        assertEquals(3.0, loopAlgorithm.max(data), 0.0001);
+    }
+
+    @Test
+    @DisplayName("Мутация: variance точное значение")
+    void testVariancePreciseValue() {
+        List<Double> data = Arrays.asList(1.0, 2.0, 3.0, 4.0, 5.0);
+        double variance = loopAlgorithm.variance(data);
+        assertEquals(2.5, variance, 0.0001);
+    }
+
+    @Test
+    @DisplayName("Мутация: variance два элемента")
+    void testVarianceTwoElements() {
+        List<Double> data = Arrays.asList(1.0, 3.0);
+        double variance = loopAlgorithm.variance(data);
+        assertEquals(2.0, variance, 0.0001);
+    }
+
+    @Test
+    @DisplayName("Мутация: skewness не пустой, не пусто")
+    void testSkewnessNotEmpty() {
+        List<Double> data = Arrays.asList(1.0, 2.0, 3.0, 4.0, 5.0);
+        double skewness = loopAlgorithm.skewness(data);
+        assertEquals(0.0, skewness, 0.0001);  // симметричное распределение
+    }
+
+    @Test
+    @DisplayName("Мутация: skewness отрицательная асимметрия")
+    void testSkewnessNegativeSkew() {
+        List<Double> data = Arrays.asList(1.0, 2.0, 3.0, 4.0, 10.0);
+        double skewness = loopAlgorithm.skewness(data);
+        assertTrue(skewness > 0);  // положительная асимметрия (хвост вправо)
+    }
+
+    @Test
+    @DisplayName("Мутация: kurtosis граничное значение (4 элемента)")
+    void testKurtosisMinElements() {
+        List<Double> data = Arrays.asList(1.0, 2.0, 3.0, 4.0);
+        double kurtosis = loopAlgorithm.kurtosis(data);
+        assertTrue(Double.isFinite(kurtosis));
+    }
+
+    @Test
+    @DisplayName("Мутация: kurtosis больше элементов")
+    void testKurtosisManyElements() {
+        List<Double> data = Arrays.asList(1.0, 2.0, 3.0, 4.0, 5.0, 6.0, 7.0, 8.0, 9.0, 10.0);
+        double kurtosis = loopAlgorithm.kurtosis(data);
+        assertTrue(Double.isFinite(kurtosis));
+        assertTrue(Math.abs(kurtosis) < 10);  // должен быть в разумном диапазоне
+    }
+
+    @Test
+    @DisplayName("Мутация: min отрицательные числа")
+    void testMinNegativeNumbers() {
+        List<Double> data = Arrays.asList(-5.0, -1.0, -10.0);
+        assertEquals(-10.0, loopAlgorithm.min(data), 0.0001);
+    }
+
+    @Test
+    @DisplayName("Мутация: max отрицательные числа")
+    void testMaxNegativeNumbers() {
+        List<Double> data = Arrays.asList(-5.0, -1.0, -10.0);
+        assertEquals(-1.0, loopAlgorithm.max(data), 0.0001);
+    }
+
+    @Test
+    @DisplayName("Мутация: median с дублирующимся значением")
+    void testMedianWithDuplicates() {
+        List<Double> data = Arrays.asList(1.0, 2.0, 2.0, 3.0, 4.0);
+        assertEquals(2.0, loopAlgorithm.median(data), 0.0001);
+    }
+
+    @Test
+    @DisplayName("Мутация: mean точное значение")
+    void testMeanPreciseValue() {
+        List<Double> data = Arrays.asList(2.0, 4.0, 6.0);
+        assertEquals(4.0, loopAlgorithm.mean(data), 0.0001);
+    }
+
+    @Test
+    @DisplayName("Мутация: variance < 2 элементов")
+    void testVarianceLessThanTwoElements() {
+        List<Double> data = Collections.singletonList(5.0);
+        assertThrows(RuntimeException.class, () -> loopAlgorithm.variance(data));
+    }
+
+    @Test
+    @DisplayName("Мутация: skewness с очень малой дисперсией")
+    void testSkewnessSmallVariance() {
+        List<Double> data = Arrays.asList(1.0, 1.001, 1.002, 1.003);
+        double skewness = loopAlgorithm.skewness(data);
+        assertTrue(Double.isFinite(skewness));
+    }
+
+    @Test
+    @DisplayName("Мутация: сравнение Loop vs Stream для всех методов")
+    void testAllMethodsLoopVsStream() {
+        List<Double> data = Arrays.asList(2.5, 3.5, 1.5, 4.5, 2.0);
+
+        assertEquals(loopAlgorithm.min(data), streamAlgorithm.min(data), 0.0001);
+        assertEquals(loopAlgorithm.max(data), streamAlgorithm.max(data), 0.0001);
+        assertEquals(loopAlgorithm.mean(data), streamAlgorithm.mean(data), 0.0001);
+        assertEquals(loopAlgorithm.median(data), streamAlgorithm.median(data), 0.0001);
+        assertEquals(loopAlgorithm.variance(data), streamAlgorithm.variance(data), 0.0001);
+        assertEquals(loopAlgorithm.skewness(data), streamAlgorithm.skewness(data), 0.0001);
+        assertEquals(loopAlgorithm.kurtosis(data), streamAlgorithm.kurtosis(data), 0.0001);
+    }
+
+}
+
+##StreamStatisticsAlgorithmTest
+package algorithm;
+
+import algorithms.LoopStatisticsAlgorithm;
+import algorithms.StatisticsAlgorithm;
+import algorithms.StreamStatisticsAlgorithm;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.ValueSource;
+import org.mockito.Mockito;
+
+import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assumptions.*;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.*;
+import static org.mockito.Mockito.*;
+
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
+
+import static org.mockito.ArgumentMatchers.anyList;
+
+@DisplayName("Тестирование StreamStatisticsAlgorithm")
+public class StreamStatisticsAlgorithmTest {
+    private final StatisticsAlgorithm loopAlgorithm = new LoopStatisticsAlgorithm();
+    private final StatisticsAlgorithm streamAlgorithm = new StreamStatisticsAlgorithm();
+
+    //ГРАНИЧНЫЕ ЗНАЧЕНИЯ (BoundaryValue)
+    @Test
+    @DisplayName("Граничное значение: пустой список должен выбрасывать исключение")
+    void testMinEmptyList_BoundaryValue() {
+        //граничное значение 0 элементов
+        assertThrows(RuntimeException.class, () -> streamAlgorithm.min(Collections.emptyList()));
+    }
+
+    @Test
+    @DisplayName("Граничное значение: один элемент")
+    void testMinSingleElement_BoundaryValue() {
+        //граничное значение 1 элемент
+        List<Double> data = Collections.singletonList(5.0);
+        double result = streamAlgorithm.min(data);
+        assertEquals(5.0, result, 0.0001);
+    }
+
+    @Test
+    @DisplayName("Граничное значение: 1 элемент для дисперсии должен выбрасывать исключение")
+    void testVarianceOneElement_BoundaryValue() {
+        //меньше минимального: 1 элемент
+        List<Double> data = Collections.singletonList(5.0);
+        assertThrows(RuntimeException.class, () -> streamAlgorithm.variance(data));
+    }
+
+    @Test
+    @DisplayName("Граничное значение: 3 элемента для эксцесса должен выбрасывать исключение")
+    void testKurtosisThreeElements_BoundaryValue() {
+        //меньше минимального: 3 элемента
+        List<Double> data = Arrays.asList(1.0, 2.0, 3.0);
+        assertThrows(RuntimeException.class, () -> streamAlgorithm.kurtosis(data));
+    }
+
+    // КЛАССЫ ЭКВИВАЛЕНТНОСТИ (Equivalence Partitioning)
+    @ParameterizedTest
+    @ValueSource(doubles = {1.0, 5.5, 100.0})
+    @DisplayName("Класс эквивалентности: положительные числа")
+    void testMeanPositiveNumbers_EquivalenceClass(double value) {
+        List<Double> data = Arrays.asList(value, value, value);
+        double result = streamAlgorithm.mean(data);
+        assertThat(result, is(closeTo(value, 0.0001)));
+    }
+
+    @ParameterizedTest
+    @ValueSource(doubles = {-1.0, -5.5, -100.0})
+    @DisplayName("Класс эквивалентности: отрицательные числа")
+    void testMeanNegativeNumbers_EquivalenceClass(double value) {
+        List<Double> data = Arrays.asList(value, value, value);
+        double result = streamAlgorithm.mean(data);
+        assertThat(result, is(closeTo(value, 0.0001)));
+    }
+
+    @Test
+    @DisplayName("Медиана: нечетное количество (3 элемента)")
+    void testMedianOddCount() {
+        List<Double> data = Arrays.asList(1.0, 2.0, 3.0);
+        assertEquals(2.0, streamAlgorithm.median(data), 0.0001);
+    }
+
+    @Test
+    @DisplayName("Медиана: четное количество (4 элемента)")
+    void testMedianEvenCount() {
+        List<Double> data = Arrays.asList(1.0, 2.0, 3.0, 4.0);
+        assertEquals(2.5, streamAlgorithm.median(data), 0.0001);
+    }
+
+    //ПОКРЫТИЕ ОПЕРАТОРОВ (Statement Testing)
+    @Test
+    @DisplayName("Покрытие операторов: все методы должны выполниться")
+    void testAllMethodExecute_StatementCoverage() {
+        List<Double> data = Arrays.asList(1.0, 2.0, 3.0, 4.0, 5.0);
+
+        //каждый метод выполнится хотя бы один раз
+        double min = streamAlgorithm.min(data);
+        double max = streamAlgorithm.max(data);
+        double mean = streamAlgorithm.mean(data);
+        double median = streamAlgorithm.median(data);
+        double variance = streamAlgorithm.variance(data);
+        double skewness = streamAlgorithm.skewness(data);
+        double kurtosis = streamAlgorithm.kurtosis(data);
+        String name = streamAlgorithm.getName();
+
+        //проверка, что все значения получены
+        assertAll("Все методы выполнены успешно",
+                () -> assertNotNull(min),
+                () -> assertNotNull(max),
+                () -> assertNotNull(mean),
+                () -> assertNotNull(median),
+                () -> assertNotNull(variance),
+                () -> assertNotNull(skewness),
+                () -> assertNotNull(kurtosis),
+                () -> assertNotNull(name));
+    }
+
+    //ПОКРЫТИЕ ВЕТВЛЕНИЙ (Branch Testing)
+    @Test
+    @DisplayName("Покрытие ветвлений: медиана для нечетного количества (else)")
+    void testMedianOddCount_BranchCoverage() {
+        //n%2!=0
+        List<Double> data = Arrays.asList(1.0, 3.0, 2.0);
+        double result = streamAlgorithm.median(data);
+        assertEquals(2.0, result, 0.0001);
+    }
+
+    @Test
+    @DisplayName("Покрытие ветвлений: медиана для нечетного количества (if)")
+    void testMedianEvenCount_BranchCoverage() {
+        //n%2==0
+        List<Double> data = Arrays.asList(1.0, 3.0, 2.0, 4.0);
+        double result = streamAlgorithm.median(data);
+        assertEquals(2.5, result, 0.0001);
+    }
+
+    @Test
+    @DisplayName("Покрытие ветвлений: isEmpty() - true/false")
+    void testIsEmpty_BranchCoverage() {
+        //пустой список
+        assertThrows(RuntimeException.class, () -> streamAlgorithm.min(Collections.emptyList()));
+
+        //заполненный список
+        List<Double> data = Collections.singletonList(1.0);
+        assertDoesNotThrow(() -> streamAlgorithm.min(data));
+    }
+
+    //СРАВНЕНИЕ АЛГОРИТМОВ
+    @Test
+    @DisplayName("Сравнение алгоритмов: Loop и Stream должны давать одинаковые результаты")
+    void testLoopVsStreamAlgorithmComparison() {
+        List<Double> data = Arrays.asList(1.0, 5.0, 3.0, 9.0, 2.0, 7.0, 4.0);
+
+        double loopMin = loopAlgorithm.min(data);
+        double streamMin = streamAlgorithm.min(data);
+        assertEquals(loopMin, streamMin, 0.0001, "min должен совпадать");
+
+        double loopMax = loopAlgorithm.max(data);
+        double streamMax = streamAlgorithm.max(data);
+        assertEquals(loopMax, streamMax, 0.0001, "max должен совпадать");
+
+    }
+
+    //ASSUMPTIONS
+    @Test
+    @DisplayName("Assumption: тест имеет смысл только для положительных размеров")
+    void testWithAssumptionOnSize() {
+        List<Double> data = Arrays.asList(1.0, 2.0, 3.0);
+
+        //предположение: тест имеет смысл только если данных больше 2
+        assumeTrue(data.size() > 2, "Требуется минимум 3 элемента");
+
+        double variance = streamAlgorithm.variance(data);
+        assertTrue(variance >= 0, "Дисперсия не может быть отрицательной");
+    }
+
+    @Test
+    @DisplayName("Assumption: пропускаем тест если выборка пустая")
+    void testWithAssumptionOnEmptyList() {
+        List<Double> data = Arrays.asList(1.0, 2.0, 3.0, 4.0, 5.0);
+
+        //предположение: данные не должны быть пустыми
+        assumeFalse(data.isEmpty(), "Данные не должны быть пустыми");
+
+        double mean = streamAlgorithm.mean(data);
+        assertThat(mean, is(greaterThan(0.0)));
+    }
+
+    //MOCKS
+    @Test
+    @DisplayName("Mock: создание мок объекта StatisticsAlgorithm")
+    void testMockStatisticsAlgorithm() {
+        StatisticsAlgorithm mockAlg = Mockito.mock(StatisticsAlgorithm.class);
+        assertNotNull(mockAlg);
+
+        double result = mockAlg.mean(Collections.emptyList());
+        assertEquals(0.0, result, 0.0001);
+    }
+
+    @Test
+    @DisplayName("Stub: настройка поведения мок объекта")
+    void testStubStatisticsAlgorithm() {
+        StatisticsAlgorithm stubAlg = Mockito.mock(StatisticsAlgorithm.class);
+
+        when(stubAlg.mean(anyList())).thenReturn(42.0);
+        when(stubAlg.min(anyList())).thenReturn(1.0);
+        when(stubAlg.max(anyList())).thenReturn(100.0);
+
+        assertEquals(42.0, stubAlg.mean(Collections.emptyList()), 0.0001);
+        assertEquals(1.0, stubAlg.min(Collections.emptyList()), 0.0001);
+        assertEquals(100.0, stubAlg.max(Collections.emptyList()), 0.0001);
+
+        verify(stubAlg, times(1)).mean(anyList());
+        verify(stubAlg, times(1)).min(anyList());
+        verify(stubAlg, times(1)).max(anyList());
+    }
+
+    @Test
+    @DisplayName("Spy: шпион на реальном объекте StreamStatisticsAlgorithm")
+    void testSpyStatisticsAlgorithm() {
+        StreamStatisticsAlgorithm spyAlg = Mockito.spy(new StreamStatisticsAlgorithm());
+
+        List<Double> data = Arrays.asList(1.0, 2.0, 3.0, 4.0, 5.0);
+        double mean = spyAlg.mean(data);
+
+        verify(spyAlg, atLeastOnce()).mean(data);
+        assertEquals(3.0, mean, 0.0001);
+    }
+
+    //MATCHERS
+    @Test
+    @DisplayName("Matchers: использование Hamcrest матчеров")
+    void testWithHamcrestMatchers() {
+        List<Double> data = Arrays.asList(1.0, 2.0, 3.0, 4.0, 5.0);
+
+        double mean = streamAlgorithm.mean(data);
+        double min = streamAlgorithm.min(data);
+        double max = streamAlgorithm.max(data);
+
+        //matcher 1 closeTo
+        assertThat(mean, is(closeTo(3.0, 0.0001)));
+
+        //matcher 2 greater/lessthan
+        assertThat(min, lessThan(mean));
+        assertThat(max, greaterThan(mean));
+
+        //matcher 3 equalto
+        assertThat(min, is(equalTo(1.0)));
+        assertThat(max, is(equalTo(5.0)));
+    }
+
+    //НЕГАТИВНЫЕ СЦЕНАРИИ
+    @Test
+    @DisplayName("Негативный сценарий: null должен выбрасывать исключение")
+    void testWithNullData() {
+        assertThrows(NullPointerException.class, () -> streamAlgorithm.mean(null));
+    }
+
+    @Test
+    @DisplayName("Негативный сценарий: эксцесс при нулевой дисперсии")
+    void testKurtosisZeroVariance() {
+        List<Double> data = Arrays.asList(5.0, 5.0, 5.0, 5.0); //дисперсия 0, т.к. элементы одинаковые
+        assertThrows(RuntimeException.class, () -> streamAlgorithm.kurtosis(data));
+    }
+}
+
+##JsonUtilsTest
+package utils;
+
+import json.SampleData;
+import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.io.TempDir;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.ValueSource;
+import org.mockito.internal.matchers.NotNull;
+
+import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assumptions.*;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.*;
+
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.util.Arrays;
+import java.util.List;
+
+@DisplayName("Тестирование JsonUtils")
+public class JsonUtilsTest {
+    @TempDir
+    Path tempDir; //временная директория для тестов
+
+    //Boundary Value
+    @Test
+    @DisplayName("Граничное значение: пустая выборка")
+    void testSaveAndLoadEmptyData_BoundaryValue() throws IOException {
+        SampleData original = new SampleData("TestSample", Arrays.asList());
+        Path testFile = tempDir.resolve("empty_test.json");
+
+        //сохранение
+        JsonUtils.saveToJson(original, testFile.toString());
+
+        //проверка что файл создан
+        assertTrue(Files.exists(testFile), "Файл должен быть создан");
+
+        //загрузка
+        SampleData loaded = JsonUtils.loadFromJson(testFile.toString());
+
+        //проверка данных
+        assertEquals(original.sampleType, loaded.sampleType);
+        assertEquals(0, loaded.data.size(), "Размер данных должен быть больше нуля");
+    }
+
+    @Test
+    @DisplayName("Граничное значение: один элемент")
+    void testSaveAndLoadSingleElement_BoundaryValue() throws IOException {
+        SampleData original = new SampleData("TestSample", Arrays.asList(42.0));
+        Path testFile = tempDir.resolve("empty_test.json");
 
 
-\begin{equation}% лучше не оставлять пропущенную строку (\par) перед окружениями для избежания лишних отсупов в pdf
-\label{eq:Pi-app} % eq - equations, далее название, ch поставлено для избежания дублирования
-\pi \approx 3,141.
-\end{equation}
-%
-%
-\begin{figure}[ht!] 
-	\center
-	\includegraphics [scale=0.27] {my_folder/images//spbpu_hydrotower}
-	\caption{Вид на гидробашню СПбПУ \cite{spbpu-gallery}} 
-	\label{fig:spbpu_hydrotower-app}  
-\end{figure}
+        JsonUtils.saveToJson(original, testFile.toString());
+        SampleData loaded = JsonUtils.loadFromJson(testFile.toString());
 
-\begin{table} [htbp]% Пример оформления таблицы
-	\centering\small
-	\caption{Представление данных для сквозного примера по ВКР \cite{Peskov2004}}%
-	\label{tab:ToyCompare-app}		
-	\begin{tabular}{|l|l|l|l|l|l|}
-		\hline
-		$G$&$m_1$&$m_2$&$m_3$&$m_4$&$K$\\
-		\hline
-		$g_1$&0&1&1&0&1\\ \hline
-		$g_2$&1&2&0&1&1\\ \hline
-		$g_3$&0&1&0&1&1\\ \hline
-		$g_4$&1&2&1&0&2\\ \hline
-		$g_5$&1&1&0&1&2\\ \hline
-		$g_6$&1&1&1&2&2\\ \hline		
-	\end{tabular}	
-	\normalsize% возвращаем шрифт к нормальному
-\end{table}
+        //проверка данных
+        assertEquals(1, loaded.data.size());
+        assertEquals(42.0, loaded.data.get(0), 0.0001);
+    }
 
+    @Test
+    @DisplayName("Граничное значение: большой файл (1000 элементов)")
+    void testSaveAndLoadLargeData() throws IOException{
+        List<Double> largeData = Arrays.asList(1.0, 2.0, 3.0); //упрощенно
+        SampleData original = new SampleData("TestSample", largeData);
+        Path testFile = tempDir.resolve("large_test.json");
+
+        JsonUtils.saveToJson(original, testFile.toString());
+        SampleData loaded = JsonUtils.loadFromJson(testFile.toString());
+
+        assertEquals(original.data.size(), loaded.data.size());
+        assertThat(loaded.data.size(), greaterThan(0));
+    }
+
+    //EQUIVALENCE PARTITIONING
+    @ParameterizedTest
+    @ValueSource(strings = {"test1.json", "test2.json", "data.json"})
+    @DisplayName("Класс эквивалентности: разные имена файлов")
+    void testSaveAndLoadVariousFilenames_EquivalenceClass(String filename) throws IOException{
+        SampleData original = new SampleData("UniformSample", Arrays.asList(1.0,2.0,3.0));
+        Path testFile = tempDir.resolve(filename);
+
+        JsonUtils.saveToJson(original, testFile.toString());
+        SampleData loaded = JsonUtils.loadFromJson(testFile.toString());
+
+        assertEquals(original.sampleType, loaded.sampleType);
+        assertEquals(original.data.size(), loaded.data.size());
+    }
+
+    @ParameterizedTest
+    @ValueSource(doubles = {-100.0, 100.0, 0.0, 3.14526})
+    @DisplayName("Класс эквивалентности: разные значения в выборке")
+    void testSaveAndLoadVariousValues_EquivalenceClass(double value) throws IOException{
+        SampleData original = new SampleData("TestSample", Arrays.asList(value, value*2, value*3));
+        Path testFile = tempDir.resolve("Values_test.json");
+
+        JsonUtils.saveToJson(original, testFile.toString());
+        SampleData loaded = JsonUtils.loadFromJson(testFile.toString());
+
+        assertEquals(original.data.size(), loaded.data.size());
+        for (int i = 0;i<original.data.size();i++) {
+            assertEquals(original.data.get(i), loaded.data.get(i), 0.0001);
+        }
+    }
+
+
+    //ПОКРЫТИЕ ОПЕРАТОРОВ STATEMENT TESTING
+    @Test
+    @DisplayName("Покрытие операторов: все методы JsonUtils должны выполниться")
+    void testAllMethodExecute_StatementCoverage() throws IOException{
+        SampleData testData = new SampleData("TestSample", Arrays.asList(1.0,2.0,3.0));
+        Path testFile = tempDir.resolve("coverage_test.json");
+
+        JsonUtils.saveToJson(testData, testFile.toString());
+        SampleData loaded = JsonUtils.loadFromJson(testFile.toString());
+        String jsonString = JsonUtils.toJson(testData);
+
+        //проверка, что все значения получены
+        assertAll("Все методы выполнены успешно",
+                ()->assertNotNull(loaded),
+                ()->assertNotNull(jsonString),
+                ()->assertTrue(jsonString.length()>0,"JSON строка не должна быть пустой"),
+                ()->assertThat(jsonString, containsString("TestSample"))
+        );
+    }
+
+    //ПОКРЫТИЕ ВЕТВЛЕНИЙ BRANCH TESTING
+    @Test
+    @DisplayName("Покрытие ветвлений: файл существует после сохранения")
+    void testFileExistsAfterSave_BranchCoverage() throws IOException{
+        SampleData testData = new SampleData("TestSample", Arrays.asList(1.0,2.0));
+        Path testFile = tempDir.resolve("exists_test.json");
+
+        JsonUtils.saveToJson(testData, testFile.toString());
+
+        assertTrue(Files.exists(testFile), "Файл должен существовать после сохранения");
+        assertTrue(Files.isRegularFile(testFile), "Должен быть обычным файлом");
+    }
+
+    @Test
+    @DisplayName("Покрытие ветвлений: загрузка несуществующего файла должна выбрасывать исключение")
+    void testLoadNonExistentFile_BranchCoverage(){
+        Path nonExistentFile = tempDir.resolve("non_existent.json");
+
+        assertThrows(RuntimeException.class, ()->JsonUtils.loadFromJson(nonExistentFile.toString()));
+    }
+
+    //НЕГАТИВНЫЕ СЦЕНАРИИ
+    @Test
+    @DisplayName("Негативный сценарий: загрузка несуществующего файла")
+    void testNonExistentFile_Negative(){
+        assertThrows(RuntimeException.class, ()->JsonUtils.loadFromJson("non_existent_file.json"));
+    }
+
+    @Test
+    @DisplayName("Негативный сценарий: сохранение в недопустимый путь")
+    void testSaveToInvalidPath_Negative(){
+        SampleData testData = new SampleData("TestSample", Arrays.asList(1.0,2.0));
+
+        //попытка сохранения в несуществующую директорию
+        assertThrows(RuntimeException.class,()->JsonUtils.saveToJson(testData, "/nonexistent/path/file.json"));
+
+    }
+
+    @Test
+    @DisplayName("Негативный сценарий: загрузка невалидного Json")
+    void testLoadInvalidJson_Negative() throws IOException{
+        Path testFile = tempDir.resolve("invalid.json");
+        Files.writeString(testFile, "not valid json {{{");
+        assertThrows(RuntimeException.class, ()->JsonUtils.loadFromJson(testFile.toString()));
+    }
+
+    //ASSUMPTIONS
+    @Test
+    @DisplayName("Assumption: тест имеет смысл только если директория доступна для записи")
+    void testWithAssumptionOnWritableDirectory() throws IOException{
+        assumeTrue(Files.exists(tempDir), "Временная директория должна существовать");
+        assumeTrue(Files.isWritable(tempDir), "Директория должна быть доступна для записи");
+
+        SampleData testData = new SampleData("TestSample", Arrays.asList(1.0,2.0,3.0));
+        Path testFile = tempDir.resolve("assumption_test.json");
+
+        JsonUtils.saveToJson(testData, testFile.toString());
+        assumeTrue(Files.exists(testFile));
+    }
+
+    @Test
+    @DisplayName("Assumption: тест имеет смысл только для файлов с расширением json")
+    void testWithAssumptionWithFileExtension() throws IOException{
+        String filename = "test.json";
+
+        assumeTrue(filename.endsWith(".json"), "Файл должен иметь расширение .json");
+
+        SampleData testData = new SampleData("TestSample", Arrays.asList(1.0,2.0));
+        Path testFile = tempDir.resolve(filename);
+
+        JsonUtils.saveToJson(testData, testFile.toString());
+        SampleData loaded = JsonUtils.loadFromJson(testFile.toString());
+
+        assertEquals(testData.sampleType, loaded.sampleType);
+
+    }
+
+    //MATCHERS
+    @Test
+    @DisplayName("Matchers: использование Hamcrest матчеров")
+    void testWithHamcrestMatchers() throws IOException{
+        SampleData testData = new SampleData("UniformSample", Arrays.asList(1.0,2.0,3.0,4.0,5.0));
+        Path testFile = tempDir.resolve("matchers_test.json");
+
+        JsonUtils.saveToJson(testData, testFile.toString());
+        String jsonString = JsonUtils.toJson(testData);
+
+        assertThat(jsonString, containsString("UniformSample"));
+        assertThat(jsonString, is(notNullValue()));
+        assertThat(jsonString.length(), is(greaterThan(10)));
+        SampleData loaded = JsonUtils.loadFromJson(testFile.toString());
+        assertThat(loaded.sampleType, is(equalTo("UniformSample")));
+
+    }
+
+    //КРУГОВОЕ ТЕСТИРОВАНИЕ
+    @Test
+    @DisplayName("Круговое тестирование: сохранение-загрузка-сравнение")
+    void testRoundTripSaveLoad() throws IOException{
+        SampleData original = new SampleData("NormalSample", Arrays.asList(1.0,2.0,3.0,4.0,5.0)).
+                withNormalParams(3.0,1.5);
+        Path testFile = tempDir.resolve("roundtrip_test.json");
+
+        JsonUtils.saveToJson(original, testFile.toString());
+        SampleData loaded = JsonUtils.loadFromJson(testFile.toString());
+
+        assertEquals(original.sampleType, loaded.sampleType, "Тип выборки должен совпадать");
+        assertEquals(original.data.size(), loaded.data.size(), "Размер данных должен совпадать");
+
+        for (int i = 0; i<original.data.size();i++){
+            assertEquals(original.data.get(i), loaded.data.get(i), 0.0001,
+                    "Элемент " + i + " должен совпадать");
+        }
+
+        assertEquals(original.meanVal, loaded.meanVal, 0.0001);
+        assertEquals(original.stddevVal, loaded.stddevVal, 0.0001);
+    }
+
+    @Test
+    @DisplayName("Круговое тестирование: toJson-парсинг-сравнение")
+    void testToJsonAndParse(){
+        SampleData original = new SampleData("TestSample", Arrays.asList(10.0, 20.0, 30.0));
+
+        //json в строку
+        String jsonString = JsonUtils.toJson(original);
+
+        //проверка что строка валидная
+        assertThat(jsonString, is(notNullValue()));
+        assertThat(jsonString, containsString("TestSample"));
+        assertThat(jsonString, containsString("10.0"));
+
+    }
+
+    @Test
+    @DisplayName("Проверка: перезапись существующего файла")
+    void testOverwriteExistingFile() throws IOException{
+        Path testFile = tempDir.resolve("overwrite_test.json");
+
+        //первое сохранение
+        SampleData first = new SampleData("FirstSample", Arrays.asList(1.0, 2.0));
+        JsonUtils.saveToJson(first, testFile.toString());
+
+        //перезапись
+        SampleData second = new SampleData("SecondSample", Arrays.asList(3.0,4.0,5.0));
+        JsonUtils.saveToJson(second, testFile.toString());
+
+        SampleData loaded = JsonUtils.loadFromJson(testFile.toString());
+
+        assertEquals("SecondSample", loaded.sampleType);
+        assertEquals(3, loaded.data.size());
+    }
+
+
+}
+
+##StatsUtilsTest
+package utils;
+
+import algorithms.LoopStatisticsAlgorithm;
+import algorithms.StreamStatisticsAlgorithm;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.ValueSource;
+import samples.*;
+
+import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assumptions.*;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.*;
+
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
+
+@DisplayName("Тестирование StatsUtils")
+public class StatsUtilsTest {
+
+    //ГРАНИЧНЫЕ ЗНАЧЕНИЯ (Boundary Value Analysis)
+    @Test
+    @DisplayName("Граничное значение: пустые выборки должны выбрасывать исключение")
+    void testCorrelationEmptyData_BoundaryValue(){
+        UniformSample sample1 = new UniformSample();
+        UniformSample sample2 = new UniformSample();
+
+        sample1.setData(Collections.emptyList());
+        sample2.setData(Collections.emptyList());
+
+        assertThrows(RuntimeException.class, ()->StatsUtils.correlation(sample1, sample2));
+    }
+
+    @Test
+    @DisplayName("Граничное значение: один элемент в выборке должен выбрасывать исключение")
+    void testCorrelationSingleElement_BoundaryValue(){
+        UniformSample sample1 = new UniformSample();
+        UniformSample sample2 = new UniformSample();
+
+        sample1.setData(Arrays.asList(1.0));
+        sample2.setData(Arrays.asList(2.0));
+
+        assertThrows(RuntimeException.class, ()->StatsUtils.correlation(sample1, sample2));
+    }
+
+    @Test
+    @DisplayName("Граничное значение: два элемента - минимум для корреляции")
+    void testCorrelationTwoElements_BoundaryValue(){
+        UniformSample sample1 = new UniformSample();
+        UniformSample sample2 = new UniformSample();
+
+        sample1.setData(Arrays.asList(1.0, 2.0));
+        sample2.setData(Arrays.asList(1.0, 2.0));
+
+        double result = StatsUtils.correlation(sample1, sample2);
+        assertEquals(1.0, result, 0.0001, "Коэффициент корреляции должен быть 1.0 для идентичных выборок");
+    }
+
+    @Test
+    @DisplayName("Граничное значение: разные размеры выборок должны выбрасывать исключение")
+    void testCorrelationDifferentSizes_BoundaryValue(){
+        UniformSample sample1 = new UniformSample();
+        UniformSample sample2 = new UniformSample();
+
+        sample1.setData(Arrays.asList(1.0, 2.0, 3.0));
+        sample2.setData(Arrays.asList(1.0, 2.0));
+
+        assertThrows(RuntimeException.class, ()->StatsUtils.correlation(sample1, sample2));
+    }
+
+    //КЛАССЫ ЭКВИВАЛЕНТНОСТИ (Equivalence Partitioning)
+    @Test
+    @DisplayName("Класс эквивалентности: положительная корреляция")
+    void testCorrelationPositive_EquivalenceClass(){
+        UniformSample sample1 = new UniformSample();
+        UniformSample sample2 = new UniformSample();
+
+        // Положительная корреляция: x растет, y растет
+        sample1.setData(Arrays.asList(1.0, 2.0, 3.0, 4.0, 5.0));
+        sample2.setData(Arrays.asList(2.0, 4.0, 6.0, 8.0, 10.0)); // y = 2x
+
+        double result = StatsUtils.correlation(sample1, sample2);
+        assertThat(result, is(closeTo(1.0, 0.0001)));
+    }
+
+    @Test
+    @DisplayName("Класс эквивалентности: отрицательная корреляция")
+    void testCorrelationNegative_EquivalenceClass(){
+        UniformSample sample1 = new UniformSample();
+        UniformSample sample2 = new UniformSample();
+
+        // Отрицательная корреляция: x растет, y уменьшается
+        sample1.setData(Arrays.asList(1.0, 2.0, 3.0, 4.0, 5.0));
+        sample2.setData(Arrays.asList(10.0, 8.0, 6.0, 4.0, 2.0)); // y = 12 - 2x
+
+        double result = StatsUtils.correlation(sample1, sample2);
+        assertThat(result, is(closeTo(-1.0, 0.0001)));
+    }
+
+    @Test
+    @DisplayName("Класс эквивалентности: нулевая дисперсия второй выборки")
+    void testCorrelationZeroVariance_EquivalenceClass(){
+        UniformSample sample1 = new UniformSample();
+        UniformSample sample2 = new UniformSample();
+
+        // Нулевая дисперсия: независимые переменные
+        sample1.setData(Arrays.asList(1.0, 2.0, 3.0, 4.0, 5.0));
+        sample2.setData(Arrays.asList(5.0, 5.0, 5.0, 5.0, 5.0)); // konstante
+
+        assertThrows(RuntimeException.class, ()->StatsUtils.correlation(sample1, sample2));
+    }
+
+    @ParameterizedTest
+    @ValueSource(ints = {2, 5, 10, 20})
+    @DisplayName("Класс эквивалентности: разные размеры выборок для положительной корреляции")
+    void testCorrelationVariousSizes_EquivalenceClass(int size){
+        UniformSample sample1 = new UniformSample();
+        UniformSample sample2 = new UniformSample();
+
+        List<Double> data1 = new java.util.ArrayList<>();
+        List<Double> data2 = new java.util.ArrayList<>();
+
+        for (int i = 0; i < size; i++) {
+            data1.add((double) i);
+            data2.add((double) i * 2);
+        }
+
+        sample1.setData(data1);
+        sample2.setData(data2);
+
+        double result = StatsUtils.correlation(sample1, sample2);
+        assertThat(result, is(closeTo(1.0, 0.0001)));
+    }
+
+    //ПОКРЫТИЕ ОПЕРАТОРОВ (Statement Testing)
+    @Test
+    @DisplayName("Покрытие операторов: все операции корреляции выполняются")
+    void testAllStatements_StatementCoverage(){
+        UniformSample sample1 = new UniformSample();
+        UniformSample sample2 = new UniformSample();
+
+        sample1.setData(Arrays.asList(1.0, 2.0, 3.0, 4.0, 5.0));
+        sample2.setData(Arrays.asList(2.0, 4.0, 5.0, 8.0, 9.0));
+
+        //выполнение корреляции охватит все операторы
+        double correlation = StatsUtils.correlation(sample1, sample2);
+
+        assertAll("Все операторы выполнены",
+                ()->assertNotNull(correlation),
+                ()->assertTrue(correlation >= -1.0 && correlation <= 1.0),
+                ()->assertFalse(Double.isNaN(correlation))
+        );
+    }
+
+    //ПОКРЫТИЕ ВЕТВЛЕНИЙ (Branch Testing)
+    @Test
+    @DisplayName("Покрытие ветвлений: проверка размера выборок (ветвь if)")
+    void testBranchDifferentSizes_BranchCoverage(){
+        UniformSample sample1 = new UniformSample();
+        UniformSample sample2 = new UniformSample();
+
+        sample1.setData(Arrays.asList(1.0, 2.0, 3.0));
+        sample2.setData(Arrays.asList(1.0, 2.0));
+
+        //ветвь: размеры не совпадают
+        assertThrows(RuntimeException.class, ()->StatsUtils.correlation(sample1, sample2));
+    }
+
+    @Test
+    @DisplayName("Покрытие ветвлений: проверка нулевой дисперсии первой выборки")
+    void testBranchZeroVarianceFirst_BranchCoverage(){
+        UniformSample sample1 = new UniformSample();
+        UniformSample sample2 = new UniformSample();
+
+        // Первая выборка имеет нулевую дисперсию (все значения одинаковые)
+        sample1.setData(Arrays.asList(5.0, 5.0, 5.0, 5.0));
+        sample2.setData(Arrays.asList(1.0, 2.0, 3.0, 4.0));
+
+        assertThrows(RuntimeException.class, ()->StatsUtils.correlation(sample1, sample2));
+    }
+
+    @Test
+    @DisplayName("Покрытие ветвлений: проверка нулевой дисперсии второй выборки")
+    void testBranchZeroVarianceSecond_BranchCoverage(){
+        UniformSample sample1 = new UniformSample();
+        UniformSample sample2 = new UniformSample();
+
+        // Вторая выборка имеет нулевую дисперсию
+        sample1.setData(Arrays.asList(1.0, 2.0, 3.0, 4.0));
+        sample2.setData(Arrays.asList(5.0, 5.0, 5.0, 5.0));
+
+        assertThrows(RuntimeException.class, ()->StatsUtils.correlation(sample1, sample2));
+    }
+
+    //СРАВНЕНИЕ АЛГОРИТМОВ
+    @Test
+    @DisplayName("Сравнение алгоритмов: Loop vs Stream для корреляции")
+    void testAlgorithmComparison(){
+        // Создание выборок с Loop алгоритмом
+        UniformSample sample1Loop = new UniformSample();
+        UniformSample sample2Loop = new UniformSample();
+        sample1Loop.setAlgorithm(new LoopStatisticsAlgorithm());
+        sample2Loop.setAlgorithm(new LoopStatisticsAlgorithm());
+
+        // Создание выборок со Stream алгоритмом
+        UniformSample sample1Stream = new UniformSample();
+        UniformSample sample2Stream = new UniformSample();
+        sample1Stream.setAlgorithm(new StreamStatisticsAlgorithm());
+        sample2Stream.setAlgorithm(new StreamStatisticsAlgorithm());
+
+        List<Double> data1 = Arrays.asList(1.0, 2.0, 3.0, 4.0, 5.0);
+        List<Double> data2 = Arrays.asList(2.0, 4.0, 6.0, 8.0, 10.0);
+
+        sample1Loop.setData(data1);
+        sample2Loop.setData(data2);
+        sample1Stream.setData(data1);
+        sample2Stream.setData(data2);
+
+        double correlationLoop = StatsUtils.correlation(sample1Loop, sample2Loop);
+        double correlationStream = StatsUtils.correlation(sample1Stream, sample2Stream);
+
+        assertEquals(correlationLoop, correlationStream, 0.0001,
+                "Результаты корреляции должны совпадать независимо от алгоритма");
+    }
+
+    //ASSUMPTIONS
+    @Test
+    @DisplayName("Assumption: тест имеет смысл только для положительных размеров")
+    void testAssumptionPositiveSize(){
+        UniformSample sample1 = new UniformSample();
+        UniformSample sample2 = new UniformSample();
+
+        sample1.setData(Arrays.asList(1.0, 2.0, 3.0, 4.0, 5.0));
+        sample2.setData(Arrays.asList(2.0, 4.0, 6.0, 8.0, 10.0));
+
+        //предположение: выборки имеют положительный размер
+        assumeTrue(sample1.getData().size() > 0, "Выборка должна содержать данные");
+
+        double result = StatsUtils.correlation(sample1, sample2);
+        assertTrue(result >= -1.0 && result <= 1.0, "Корреляция должна быть в диапазоне [-1, 1]");
+    }
+
+    @Test
+    @DisplayName("Assumption: тест имеет смысл только если выборки одного размера")
+    void testAssumptionSameSizeRequired(){
+        UniformSample sample1 = new UniformSample();
+        UniformSample sample2 = new UniformSample();
+
+        sample1.setData(Arrays.asList(1.0, 2.0, 3.0, 4.0));
+        sample2.setData(Arrays.asList(5.0, 6.0, 7.0, 8.0));
+
+        //предположение: размеры совпадают
+        assumeTrue(sample1.getData().size() == sample2.getData().size(),
+                "Выборки должны быть одного размера");
+
+        double result = StatsUtils.correlation(sample1, sample2);
+        assertNotNull(result);
+    }
+
+    //НЕГАТИВНЫЕ СЦЕНАРИИ
+    @Test
+    @DisplayName("Негативный сценарий: null в качестве первой выборки")
+    void testNullFirstSample_NegativeScenario(){
+        assertThrows(NullPointerException.class, ()->StatsUtils.correlation(null, new UniformSample()));
+    }
+
+    @Test
+    @DisplayName("Негативный сценарий: null в качестве второй выборки")
+    void testNullSecondSample_NegativeScenario(){
+        assertThrows(NullPointerException.class, ()->StatsUtils.correlation(new UniformSample(), null));
+    }
+
+    @Test
+    @DisplayName("Негативный сценарий: выборка с одинаковыми значениями в обеих")
+    void testIdenticalValues_NegativeScenario(){
+        UniformSample sample1 = new UniformSample();
+        UniformSample sample2 = new UniformSample();
+
+        // Обе выборки имеют нулевую дисперсию
+        sample1.setData(Arrays.asList(5.0, 5.0, 5.0, 5.0));
+        sample2.setData(Arrays.asList(3.0, 3.0, 3.0, 3.0));
+
+        assertThrows(RuntimeException.class, ()->StatsUtils.correlation(sample1, sample2));
+    }
+
+    //MATCHERS
+    @Test
+    @DisplayName("Matchers: проверка диапазона корреляции")
+    void testCorrelationRange_Matchers(){
+        UniformSample sample1 = new UniformSample();
+        UniformSample sample2 = new UniformSample();
+
+        sample1.setData(Arrays.asList(1.0, 2.0, 3.0, 4.0, 5.0));
+        sample2.setData(Arrays.asList(2.0, 3.0, 5.0, 8.0, 9.0));
+
+        double result = StatsUtils.correlation(sample1, sample2);
+
+        //matcher: результат в диапазоне [-1, 1]
+        assertThat(result, is(greaterThanOrEqualTo(-1.0)));
+        assertThat(result, is(lessThanOrEqualTo(1.0)));
+    }
+
+    @Test
+    @DisplayName("Matchers: проверка идентичных выборок")
+    void testIdenticalSamples_Matchers(){
+        UniformSample sample1 = new UniformSample();
+        UniformSample sample2 = new UniformSample();
+
+        sample1.setData(Arrays.asList(1.0, 2.0, 3.0, 4.0, 5.0));
+        sample2.setData(Arrays.asList(1.0, 2.0, 3.0, 4.0, 5.0));
+
+        double result = StatsUtils.correlation(sample1, sample2);
+
+        //matcher: идеальная положительная корреляция
+        assertThat(result, is(closeTo(1.0, 0.0001)));
+    }
+
+    //ДОПОЛНИТЕЛЬНЫЕ ТЕСТЫ
+    @Test
+    @DisplayName("Сценарий: слабая положительная корреляция")
+    void testWeakPositiveCorrelation(){
+        NormalSample sample1 = new NormalSample(0, 1);
+        NormalSample sample2 = new NormalSample(0, 1);
+
+        sample1.setData(Arrays.asList(1.0, 2.0, 3.0, 4.0, 5.0));
+        sample2.setData(Arrays.asList(1.5, 2.2, 3.1, 3.9, 5.1));
+
+        double result = StatsUtils.correlation(sample1, sample2);
+
+        assertThat(result, is(greaterThan(0.0)));
+        assertThat(result, is(lessThan(1.0)));
+    }
+
+    @Test
+    @DisplayName("Сценарий: умеренная положительная корреляция")
+    void testModeratePositiveCorrelation(){
+        UniformSample sample1 = new UniformSample();
+        UniformSample sample2 = new UniformSample();
+
+        sample1.setData(Arrays.asList(1.0, 2.0, 3.0, 4.0, 5.0, 6.0));
+        sample2.setData(Arrays.asList(1.0, 3.0, 2.0, 4.0, 5.0, 6.0));
+
+        double result = StatsUtils.correlation(sample1, sample2);
+
+        assertTrue(result > 0.5 && result < 1.0, "Корреляция должна быть умеренной");
+    }
+}
+
+\end{verbatim}
